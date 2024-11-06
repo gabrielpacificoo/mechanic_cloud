@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/homeStyle.css" />
+    <script src="./main.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <header>
+      <div id="social">
+        <img src="./assets/git.svg" alt="" />
+        <img src="./assets/linkedin.svg" alt="" />
+        <img src="./assets/facebook.svg" alt="" />
+        <img src="./assets/instagram.svg" alt="" />
+      </div>
+
+      <div id="navegation">
+        <span>Mechanic Cloud</span>
+      </div>
+      <div onclick="redirect('./acess.html')" class="cursor" id="acess">
+        <div class="container" id="container_signin">
+          <p>Cadastre-se</p>
+          <img src="./assets/sign.svg" alt="" />
+        </div>
+        <div class="container" id="container_acess">
+          <img src="./assets/login.svg" alt="" />
+          <p>Acessar Cloud</p>
+        </div>
+      </div>
+
+    </header>
+    <div id="go_to">
+      <p>Aplicação</p>
+      <p>Quem pode usar</p>
+      <p>Quem somos</p>
+    </div>
+
+    <section>
+      <div id="semi_header">
+        <h3>Buscando otimizar os processos em sua oficina automotiva?</h3>
+      </div>
+
+      <div id="introdution">
+        <div id="content">
+          <p>Mechanic Cloud fornece serviços que garante eficiência em:</p>
+          <span>Gestão de serviços</span>
+          <span>Cadastro de veículos</span>
+          <span>Gestão de clientes</span>
+          <span>Criação de Orçamento</span>
+        </div>
+        <div id="backgroundIntro">
+          <img src="./assets/carHome.svg" alt="">
+        </div>
+      </div>
+
+      <div id="who_uses">
+        <div id="content">
+          <h2>Quem pode usar?</h2>
+          <div id="grid">
+            <span>Oficinas mecânicas</span>
+            <span>Funilaria</span>
+            <span>Empresas de frotas</span>
+          </div>
+
+          <p>
+            A partir da solução da Mechanic Cloud é possível transformar sua
+            oficina em um ambiente tecnológico e organizado, facilitando os
+            processos de gestão e gerando maior tempo para linha de produção.
+          </p>
+        </div>
+
+        <div id="plataforms">
+          <h4>Plataformas compatíveis</h4>
+          <div id="content">
+            <div id="images">
+              <img src="./assets/computer.svg" alt="" />
+              <img src="./assets/notebook.svg" alt="" />
+            </div>
+              <p>Infelizmente nossa aplicação é compatível apenas com plataformas
+              desktop e notebook, mas no futuro temos planejamento de adaptar a
+              nossa aplicação para mobile</p>
+
+          </div>
+        </div>
+      </div>
+
+      <div id="why_us">
+        <h2>Por que escolher a CloudSolutions?</h2>
+        <p>
+          Nossa missão é revolucionar a maneira como oficinas automotivas
+          gerenciam suas operações, trazendo tecnologia de ponta e inovação para
+          o dia a dia dos nossos clientes.
+        </p>
+      </div>
+
+      <div id="questions">
+        <h2>Algum dúvidas? Entre em contato conosco</h2>
+
+        <div id="inputs">
+          <div class="input-container">
+            <input type="text" id="input_nome" required="">
+            <label for="input" class="label">Nome completo</label>
+            <div class="underline"></div>
+          </div>            
+          <div class="input-container">
+            <input type="text" id="input_telefone" required="">
+            <label for="input" class="label">Telefone</label>
+            <div class="underline"></div>
+          </div>            
+          <div class="input-container">
+            <input type="text" id="input_email" required="">
+            <label for="input" class="label">Email</label>
+            <div class="underline"></div>
+          </div>            
+          <div class="teste input-container">
+            <input type="text" id="input_mensagem" required="">
+            <label for="input" class="label">Mensagem</label>
+            <div class="underline"></div>
+          </div>            
+          <button>Enviar mensagem</button>
+        </div>
+
+
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

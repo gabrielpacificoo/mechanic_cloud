@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horizontal Scroll</title>
+    <style>
+        .container {
+            width: 200vw; /* Tamanho maior que a tela para demonstrar o scroll horizontal */
+            display: flex;
+        }
+        .box {
+            width: 100vw;
+            height: 100vh;
+            flex-shrink: 0;
+        }
+        .box1 { background-color: lightcoral; }
+        .box2 { background-color: lightblue; }
+    </style>
+</head>
+<body>
+    <button onclick="scrollRight()">Scroll Right</button>
+    <div class="container">
+        <div class="box box1">Box 1</div>
+        <div class="box box2">Box 2</div>
+    </div>
+
+    <script>
+        function scrollRight() {
+            window.scrollBy({
+                top: 0,
+                left: window.innerWidth,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>
