@@ -92,6 +92,7 @@ header #acess .container img{
 header #acess .container p{
   width: 80%;
   height: 100%;
+  font-size: 2.5vh;
   font-weight: 500;
   text-align: center;
 }
@@ -370,8 +371,54 @@ section #questions #btn_div button:focus ~  #btn_underline {
 }
 
 
+#inputs .input-container {
+  position: relative;
+  margin: 3% 5%;
+  width: 23.3%;
+}
 
+#inputs .input-container input[type="text"] {
+  font-size: 20px;
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  padding: 5px 0;
+  background-color: transparent;
+  outline: none;
+}
 
+#inputs .input-container .label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #ccc;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
 
+#inputs .input-container input[type="text"]:focus ~ .label,
+#inputs .input-container input[type="text"]:valid ~ .label {
+  top: -20px;
+  font-size: 16px;
+  color: #333333;
+}
 
+#inputs .input-container .underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background-color: #333333;
+  transform: scaleX(0);
+  transition: all 0.3s ease;
+}
 
+#inputs .input-container input[type="text"]:focus ~ .underline,
+#inputs .input-container input[type="text"]:valid ~ .underline {
+  transform: scaleX(1);
+}
+
+#inputs .input-container:nth-child(4) {
+  width: 100%;
+}

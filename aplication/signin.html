@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/acessStyle.css" />
+    <link rel="stylesheet" href="./css/general.css" />
+    <title>Document</title>
+  </head>
+  <body class="fade-in">
+
+    <div id="signin">
+      <h2>Cadastre-se</h2>
+      <div id="inputs">
+        <div class="input-container-1">
+          <input type="text" id="input_nome" required="">
+          <label for="input" class="label">Insira seu nome completo</label>
+          <div class="underline"></div>
+        </div> 
+  
+        <div class="input-container-1">
+          <input type="text" id="input_email" required="">
+          <label for="input" class="label">Insira seu principal e-mail</label>
+          <div class="underline"></div>
+        </div>    
+  
+        <div class="input-container-1">
+          <input type="text" id="input_password" required="">
+          <label for="input" class="label">Escolha sua melhor senha</label>
+          <div class="underline"></div>
+        </div>    
+  
+        <div class="input-container-1">
+          <input type="text" id="input_confirm" required="">
+          <label for="input" class="label">Confirme sua senha</label>
+          <div class="underline"></div>
+        </div>    
+  
+        <div class="input-container-1">
+          <input type="text" id="input_empresa" required="">
+          <label for="input" class="label">Nome da sua empresa</label>
+          <div class="underline"></div>
+        </div>    
+  
+        <div class="input-container-1">
+          <input type="text" id="input_cnpj" required="">
+          <label for="input" class="label">CNPJ da sua empresa</label>
+          <div class="underline"></div>
+        </div>    
+  
+        <div class="input-container-1">
+          <input type="text" id="input_telefone" required="">
+          <label for="input" class="label">Telefone ou Celular</label>
+          <div class="underline"></div>
+        </div>    
+      </div>
+
+      <button>
+        <div class="button">
+          <div id="img_button"><img src="./assets/buttonAcess.svg" alt=""></div>
+          <p id="txt_button">Cadastrar</p>
+        </div>
+      </button>
+
+      <p>Já possuí conta? <span onclick="redirect('./acess.html')">Acesse a cloud</span></p>
+    </div>
+    <div id="image">
+      <img src="./assets/img_acess.png" alt="" />
+    </div>
+
+  </body>
+</html>
+<script src="./main.js"></script>

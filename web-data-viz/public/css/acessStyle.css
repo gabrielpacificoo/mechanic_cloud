@@ -146,8 +146,8 @@ body #signin {
 
 body #signin h2 {
   width: 100%;
-  height: 15%;
-  font-size: 45px;
+  height: 10%;
+  font-size: 8vh;
 
   color: #404040;
 
@@ -162,7 +162,7 @@ body #signin #inputs {
   flex-direction: row;
   flex-wrap: wrap;
 
-  width: 100%;
+  width: 80%;
   height: 50%;
 }
 
@@ -170,15 +170,16 @@ body #signin button {
   display: flex;
 
   width: 60%;
-  height: 8%;
-
-  margin-bottom: 5%;
+  height: 7.5%;
+  justify-content: center;
 
   cursor: pointer;
   background: none;
+  margin: 0px;
   padding: 0px;
   border: none;
   border-radius: 20px 0px 0px 20px;
+  margin-bottom: 5%;
 
   transition: transform 0.5s ease-in;
 }
@@ -222,8 +223,19 @@ body #signin .button #txt_button {
   justify-content: center;
 }
 
+#outputCadastro {
+  font-size: 2vh;
+  padding: 0% 5%;
+  margin-top: 1rem;
+  height: 3rem;
+}
+
+#span_ver {
+  font-size: 2vh;
+}
+
 body #signin p {
-  font-size: larger;
+  font-size: 2.5vh;
   color: #909090;
 
 }
@@ -238,10 +250,12 @@ body #signin p span {
   margin: 1% 5% 0% 5%;
   width: 100%;
   height: 15%;
+  /* display: flex; */
 }
 
-.input-container-1 input[type="text"] {
-  font-size: 20px;
+.input-container-1 input[type="text"],
+.input-container-1 input[type="password"] {
+  font-size: 3vh;
   width: 100%;
   border: none;
   border-bottom: 2px solid #202020;
@@ -254,15 +268,19 @@ body #signin p span {
   position: absolute;
   top: 0;
   left: 0;
+  font-size: 2vh;
   color: #202020;
   transition: all 0.3s ease;
   pointer-events: none;
 }
 
+
 .input-container-1 input[type="text"]:focus ~ .label,
-.input-container-1 input[type="text"]:valid ~ .label {
+.input-container-1 input[type="text"]:valid ~ .label,
+.input-container-1 input[type="password"]:focus ~ .label,
+.input-container-1 input[type="password"]:valid ~ .label {
   top: -20px;
-  font-size: 16px;
+  font-size: 2vh;
   color: #202020;
 }
 
@@ -290,3 +308,33 @@ body #signin p span {
   width: 40%;
 }
 
+.red {
+  content: '';
+  display: block;
+  margin: 1% 5% 0 5%;
+  width: 100%;
+  height: 15%;
+  background-color: transparent; /* Ajuste conforme necessário */
+  position: relative;
+}
+
+.red input[type="text"],
+.red input[type="password"] {
+  border-bottom: 2px solid #ff0000;
+  background-color: transparent;
+}
+
+.red .label {
+  color: #ff0000;
+}
+
+.red input[type="text"]:focus ~ .label,
+.red input[type="text"]:valid ~ .label,
+.red input[type="password"]:focus ~ .label,
+.red input[type="password"]:valid ~ .label {
+  color: #ff0000;
+}
+
+.red .underline {
+  background-color: #ff0000;
+}
