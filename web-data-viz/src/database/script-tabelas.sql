@@ -1,3 +1,4 @@
+
 CREATE DATABASE mechanic;
 USE mechanic;
 
@@ -9,6 +10,8 @@ CREATE TABLE usuario (
   telefone CHAR(12)
 );
 
+
+SELECT idUsuario FROM usuario WHERE nomeCompleto = 'a' and email = 'a' and senha = 1234;
 CREATE TABLE oficina (
   idOficina INT primary key auto_increment,
   fkUsuario INT,
@@ -35,22 +38,25 @@ SELECT u.nomeCompleto as Dono,
   JOIN usuario as u
   ON o.fkUsuario = u.idUsuario;
 
+  SELECT * from usuario;
+
 -- Sessão dos dados de Software da Oficina;
 CREATE TABLE empresa (
   idEmpresa INT primary key auto_increment,
   razaoSocial CHAR(60),
-  cnpj CHAR(14)
+  cnpj CHAR(14),
+  fkDono INT,
+  CONSTRAINT fkEmpresaCliente FOREIGN KEY (fkDono) REFERENCES cliente(idCliente)
 )
 
 CREATE TABLE cliente (
   idCliente INT primary key auto_increment,
-  fkEmpresa INT,
-  CONSTRAINT fkEmpresaCliente FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa),
   fkOficina INT,
   CONSTRAINT fkOficinaCliente FOREIGN KEY (fkOficina) REFERENCES oficina(idOficina),
   nome VARCHAR(60),
   email VARCHAR(60),
-  telefone CHAR(12)
+  telefone CHAR(12),
+  cpf CHAR(11) UNIQUE
 );
 
 INSERT INTO empresa (razaoSocial, cnpj) VALUES 
@@ -59,7 +65,12 @@ INSERT INTO empresa (razaoSocial, cnpj) VALUES
 ('Gamma Enterprises', '34567890000103'),
 ('Delta Dynamics', '45678900000104');
 
-SELECT * from empresa;
+select * from empresa;
+
+SELECT * from empresa as e 
+  RIGHT join cliente as c 
+  on e.fkDono = c.idCliente;
+
 -- Clientes com empresa
 INSERT INTO cliente (fkEmpresa, fkOficina, nome, email, telefone) VALUES 
 (1, 1, 'João Almeida', 'joao.almeida@example.com', '11987654321'),
@@ -94,7 +105,7 @@ CREATE TABLE veiculo (
   placa CHAR(7)
 );
 
--- Entrada & Saída de veiculos
+-- Entrada & Saída de veiculosx'  
 CREATE TABLE hospedagem (
   idHospedagem INT primary key auto_increment,
   fkVeiculo INT,
@@ -105,6 +116,8 @@ CREATE TABLE hospedagem (
   rg CHAR(9),
   cpf CHAR(9)
 )
+
+SELECT * from veiculo;
 
 -- Veículos associados a clientes
 INSERT INTO veiculo (fkCliente, marca, modelo, ano, placa) VALUES 
@@ -195,6 +208,18 @@ INSERT INTO orcamento VALUES
   (default, '2024-01-11', 'Pendente'),
   (default, '2024-01-11', 'Pendente');
 
+SELECT  * FROM oficina;
+
+SELECT idCliente, nome FROM cliente WHERE fkOficina = ;
+
+INSERT INTO cliente (fkOficina, nome, email, telefone) VALUES
+(1, 'Carlos Ferreira', 'carlos.ferreira@example.com', '11987654321'),
+(1, 'Ana Souza', 'ana.souza@example.com', '21987654322'),
+(1, 'Miguel Oliveira', 'miguel.oliveira@example.com', '31987654323'),
+(1, 'Beatriz Santos', 'beatriz.santos@example.com', '41987654324'),
+(1, 'Lucas Almeida', 'lucas.almeida@example.com', '51987654325');
+
+
 INSERT INTO servico VALUES 
   (DEFAULT, 1, 'Porta Lateral LD Motorista (Azul/Prata/Verniz)'),
   (DEFAULT, 1, 'Troca da Direção'),
@@ -243,4 +268,4 @@ SELECT o.orcStatus as Status,
   ON his.fkServico = s.idServico
   JOIN orcamento as o
   ON his.fkOrcamento = o.idOrcamento
-  GROUP BY o.orcStatus, v.marca, v.modelo, v.ano;
+  GROUP BY o.orcStatus, v.marca, v.modelo, v.ano;	
