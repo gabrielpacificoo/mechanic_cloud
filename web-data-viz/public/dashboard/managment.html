@@ -1,43 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../css/managmentStyle.css">
-    <link rel="stylesheet" href="../css/general.css">
 
-    <script src="../js/sessao.js"></script>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../css/managmentStyle.css">
+  <link rel="stylesheet" href="../css/general.css">
 
-    <title>Document</title>
-  </head>
-  <body>
-    <div id="navegation">
-        <h1 id="nomeEmpresa">Empresa</h1>
-        <p>Seja bem vindo <span id="userName"><i>Nome do usuário!</i></span></p>
+  <script src="../js/sessao.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        <div id="layoutSections">
-            <div id="btn_dashboard" class="button" ><img src="../assets/AnaliseInfo.svg" alt=""> <span>Análise de informações</span></div>
-            <div id="btn_veiculos" class="button" onclick="openDisplay('veiculos')"><img src="../assets/cadVeiculo.svg" alt=""> <span>Cadastro de veículos</span></div>
-            <div id="btn_cliente" class="button" onclick="openDisplay('clientes')" ><img src="../assets/cadCliente.svg" alt=""> <span>Cadastro de clientes</span></div>
-            <div id="btn_transito" class="button" onclick="openDisplay('orcamentos')"><img src="../assets/regEntradaSaida.svg" alt=""> <span>Registro de entrada e saída</span></div>
-            <div id="btn_orcamento" class="button" ><img src="../assets/regOrcamento.svg" alt=""> <span>Registro de orçamentos</sp></div>
-            <div onclick="redirect('../index.html'); limparSessao()" id="btn_leave" class="leave" ><span>Sair</sp></div>
-        </div>
+  <title>Document</title>
+</head>
 
-        <p id="ajuda">Está precisando de suporte? <span>Entre em contato conosco</span></p>
+<body>
+  <div id="navegation">
+    <h1 id="nomeEmpresa">Empresa</h1>
+    <p>Seja bem vindo <span id="userName"><i>Nome do usuário!</i></span></p>
+
+    <div id="layoutSections">
+      <div id="btn_dashboard" class="button" onclick="openDisplay('dashboard')"><img src="../assets/AnaliseInfo.svg"
+          alt=""> <span>Análise de informações</span></div>
+      <div id="btn_cliente" class="button" onclick="openDisplay('clientes')"><img src="../assets/cadCliente.svg" alt="">
+        <span>Cadastro de clientes</span>
+      </div>
+      <div id="btn_veiculos" class="button" onclick="openDisplay('veiculos')"><img src="../assets/cadVeiculo.svg"
+          alt=""> <span>Cadastro de veículos</span></div>
+      <div id="btn_orcamento" class="button" onclick="openDisplay('orcamentos')"><img src="../assets/regOrcamento.svg"
+          alt=""> <span>Registro de orçamentos</sp>
+      </div>
+      <div onclick="redirect('../index.html'); limparSessao()" id="btn_leave" class="leave"><span>Sair</sp>
+      </div>
     </div>
 
-    <div id="content">
-      <div id="dashboard"></div>
-      <div id="veiculos">
-        <h1>Cadastro de veículos</h1>
-        
-        <div class="content">
-          <h4>Lembre-se de realizar o cadastro do Cliente inicialmente para poder cadastrar os veículos</h4>
+    <p id="ajuda">Está precisando de suporte? <span>Entre em contato conosco</span></p>
+  </div>
 
-          <div id="informacoesVeiculo">
+  <div id="content">
+    <div id="dashboard">
+      <h1>Análise de informações</h1>
+      <div id="kpiClientes">
+        <h4 id="totalClienteCad">10 Clientes cadastrado no sistema</h4>
+        <h4 id="totalVeiculosCad">7 Veiculos cadastrado no sistema</h4>
+        <!-- <h4 id="totalVeiculosOrc">2 Veiculos na oficina</h4>
+        <h4 id="totalRendaMes">R$1500 de Receita neste mês</h4> -->
+      </div>
 
-          <p>Informe o cliente do veículo:</p> 
+      <div class="graph" id="graficoServicosFeitoNoMesEDia">
+        <canvas id="myChartServicos"></canvas>
+      </div>
+
+    </div>
+
+    <div id="veiculos">
+      <h1>Cadastro de veículos</h1>
+
+      <div class="content">
+        <h4>Lembre-se de realizar o cadastro do Cliente inicialmente para poder cadastrar os veículos</h4>
+
+        <div id="informacoesVeiculo">
+
+          <p>Informe o cliente do veículo:</p>
           <select name="" id="select_clientVeiculo">
             <option value="#" selected disabled>Selecione um cliente</option>
           </select>
@@ -51,110 +74,129 @@
           <p>Informe o Ano de fabricação do veículo</p>
           <input placeholder="Ex: '2002'" type="text" id="input_ano">
 
-          <p>Informe a Placa  do veículo</p>
+          <p>Informe a Placa do veículo</p>
           <input placeholder="Ex: '7 Dígitos'" type="text" id="input_placa">
         </div>
 
 
-          <button onclick="CadastrarVeiculo()">Cadastrar Veículo</button>
+        <button onclick="CadastrarVeiculo()">Cadastrar Veículo</button>
 
-          <div id="outputVeiculo"></div>
+        <div id="outputVeiculo"></div>
+      </div>
+
+    </div>
+    <div id="clientes">
+      <h1>Cadastro de clientes</h1>
+
+      <div class="content">
+        <div class="content_cliente">
+          <p>Informe o nome completo do Cliente:</p>
+          <div class="iptContainer">
+            <input type="text" id="input_nomeCliente">
+            <div class="iptLine"></div>
+          </div>
+
+          <p>Email do Cliente:</p>
+          <p>Telefone do Cliente:</p>
+          <div class="iptContainer">
+            <input type="text" id="input_emailCliente">
+            <div class="iptLine"></div>
+          </div>
+
+          <div class="iptContainer">
+            <input type="number" id="input_telefoneCliente">
+            <div class="iptLine"></div>
+          </div>
+
+          <p>CPF do Cliente:</p>
+          <div class="iptContainer">
+            <input type="number" id="input_cpfCliente">
+            <div class="iptLine"></div>
+          </div>
+
         </div>
+        <div class="content_empresa">
+          <p>Serviço destinado a uma Empresa:</p>
+          <!-- /* From Uiverse.io by elizama987 */  -->
+          <!-- <label class="container">
+<input type="checkbox" />
+<div class="checkmark"></div>
+</label>             -->
+          <input onclick="switchCheckBox()" id="input_toEmpresa" type="checkbox" checked="checked" />
+
+          <p id="txtEmpresa1">Nome da Empresa:</p>
+          <div id="containerEmpresa" class="iptContainer">
+            <input type="text" id="input_empresaCliente">
+            <div class="iptLine"></div>
+          </div>
+
+          <p id="txtEmpresa2">CNPJ da Empresa:</p>
+          <div id="containerCNPJ" class="iptContainer">
+            <input type="text" id="input_cnpjCliente">
+            <div class="iptLine"></div>
+          </div>
+
+        </div>
+        <button id="button_cliente" onclick="CadastrarCliente()">Cadastrar Cliente</button>
+        <div id="outputCadastroCliente"></div>
 
       </div>
-      <div id="clientes">
-        <h1>Cadastro de clientes</h1>
+    </div>
+    <div id="orcamentos">
+      <h1>Registro de orçamento</h1>
+      <div id="cadastro">
 
-        <div class="content">
-          <div class="content_cliente">
-            <p>Informe o nome completo do Cliente:</p>
-            <div class="iptContainer">
-              <input type="text" id="input_nomeCliente">
-              <div class="iptLine"></div>
-            </div>
-  
-            <p>Email do Cliente:</p>
-            <p>Telefone do Cliente:</p>
-            <div class="iptContainer">
-              <input type="text" id="input_emailCliente">
-              <div class="iptLine"></div>
-            </div>
+        <div id="divSelects">
+          <p>Selecione o Cliente:</p>
+          <select name="" id="select_client" onchange="ListarVeiculosDoCliente()">
+            <option value="#" selected disabled>Selecione um cliente</option>
+          </select>
 
-            <div class="iptContainer">
-              <input type="number" id="input_telefoneCliente">
-              <div class="iptLine"></div>
-            </div>
-  
-            <p>CPF do Cliente:</p>
-            <div class="iptContainer">
-              <input type="number" id="input_cpfCliente">
-              <div class="iptLine"></div>
-            </div>
-            
-          </div>
-          <div class="content_empresa">
-            <p>Serviço destinado a uma Empresa:</p>
-            <!-- /* From Uiverse.io by elizama987 */  -->
-            <!-- <label class="container">
-              <input type="checkbox" />
-              <div class="checkmark"></div>
-            </label>             -->
-            <input onclick="switchCheckBox()" id="input_toEmpresa" type="checkbox" checked="checked"/>
-
-            <p id="txtEmpresa1">Nome da Empresa:</p>
-            <div id="containerEmpresa" class="iptContainer">
-              <input type="text" id="input_empresaCliente">
-              <div class="iptLine"></div>
-            </div>
-            
-            <p id="txtEmpresa2">CNPJ da Empresa:</p>
-            <div id="containerCNPJ" class="iptContainer">
-              <input type="text" id="input_cnpjCliente">
-              <div class="iptLine"></div>
-            </div>
-
-          </div>
-          <button id="button_cliente" onclick="cadastrarCliente()">Cadastrar Cliente</button>
-          <div id="outputCadastroCliente"></div>
-          
+          <p>Selecione o Veículo:</p>
+          <select name="" id="select_veiculo">
+            <option value="#" selected disabled>Selecione um veículo</option>
+          </select>
         </div>
-      </div>
-      <div id="orcamentos">
-        <h1>Registro de orçamento</h1>
 
-        <p>Selecione o Cliente:</p> 
-        <select name="" id="select_client">
-          <option value="#" selected disabled>Selecione um cliente</option>
-        </select>
-
-        <p>Selecione o Veículo:</p> 
-        <select name="" id="select_veiculo">
-          <option value="#" selected disabled>Selecione um veículo</option>
-        </select>
-
-        <div id="servicos">
+        <div id="allService">
           <div id="modalServico">
-            1° - Tipo do serviço: 
-            <select name="" id="select_service">
+            <p>Tipo do serviço:</p>
+            <select name="" id="select_tipo">
               <option value="#" selected disabled>Selecione o tipo de serviço</option>
               <option value="Funilaria">Funilaria</option>
               <option value="Pintura">Pintura</option>
               <option value="Mecanica">Mecanica</option>
             </select>
-            Descrição do serviço: 
-            <textarea id="input_descricao" name="w3review" rows="1" cols="30">
-              
-              </textarea>
-            Valor:
+            <p>Descrição do serviço:</p>
+            <textarea id="input_descricao" name="w3review" rows="1" cols="30"></textarea>
+            <p>Valor:</p>
             <input type="number" id="input_valor">
+            <button onclick="serviceList()">Inserir na lista de Serviços</button>
+          </div>
+
+          <div id="servicos">
           </div>
         </div>
 
-        <button onclick="moreOption()">Adicionar coluna</button>
+        <p>Data de hoje será cadastrada no orçamento</p>
+        <button onclick="RegistrarOrcamento()">Cadastrar orçamento</button>
+        <div id="outputOrcamento"></div>
+        <!-- <input type="date" id="input_data"> -->
       </div>
-      <div id="transito"></div>
+
+      <h1>Orçamentos</h1>
+      <div id="orcViz">
+
+        <div id="visualizacao">
+
+        </div>
+      </div>
+
     </div>
-  </body>
+    <div id="transito"></div>
+  </div>
+</body>
+
 </html>
 <script>
   userName.innerHTML = sessionStorage.NOME_USUARIO;
@@ -162,34 +204,76 @@
 
   document.body.onload = chkUndefined();
   document.body.onload = ListarClientes();
-  
+
   input_toEmpresa.checked = false;
   containerEmpresa.style.display = 'none'
-  containerCNPJ.style.display = 'none' 
-  txtEmpresa1.style.display = 'none' 
-  txtEmpresa2.style.display = 'none' 
+  containerCNPJ.style.display = 'none'
+  txtEmpresa1.style.display = 'none'
+  txtEmpresa2.style.display = 'none'
 
-  var listaClientes = []
-    var id = sessionStorage.ID_USUARIO;
+  var listaClientes = [];
+  var listaServicos = [];
+  var listaVeiculos = [];
+  var id = sessionStorage.ID_USUARIO;
 
-  // veiculos.style.display = 'none'
-  // clientes.style.display = 'none'
-  // orcamentos.style.display = 'none'
-
-  function openDisplay(pageID) {
   veiculos.style.display = 'none'
+  dashboard.style.display = 'none'
   clientes.style.display = 'none'
   orcamentos.style.display = 'none'
 
-  document.getElementById(pageID).style.display = 'block  '
+  function openDisplay(pageID) {
+    veiculos.style.display = 'none'
+    dashboard.style.display = 'none'
+    clientes.style.display = 'none'
+    orcamentos.style.display = 'none'
+
+    document.getElementById(pageID).style.display = 'flex'
   }
 
   function chkUndefined() {
     if (sessionStorage.NOME_USUARIO == undefined) {
       redirect('../index.html')
-    } else {
-      console.log('Ta ok')
-    }    
+    }
+  }
+
+  function serviceList() {
+
+    var tipo = select_tipo.value;
+    var descricao = input_descricao.value;
+    var valor = input_valor.value;
+
+    if (tipo == '' || descricao == '' || valor == '') {
+      servicos.innerHTML = 'Não deixe os campos de serviço em branco.';
+      return
+    }
+
+    if (tipo == '#') {
+      servicos.innerHTML = 'Selecione o tipo do serviço.';
+      return
+    }
+
+    if (isNaN(valor)) {
+      servicos.innerHTML = 'O valor deve ser um número.';
+      return
+    }
+
+    var msg = "<h4> Serviços adicionados na lista: </h4> <br>";
+
+    var servico = {
+      tipo: `${tipo}`,
+      descricao: `${descricao}`,
+      valor: `${valor}`,
+    };
+
+    listaServicos.push(servico);
+
+    for (var i = 0; i < listaServicos.length; i++) {
+      var element = listaServicos[i];
+
+      msg += `${i + 1}º - Tipo: ${listaServicos[i].tipo} || Descrição: ${listaServicos[i].descricao} || Valor: R$${listaServicos[i].valor} <br>`;
+    }
+
+    servicos.innerHTML = msg;
   }
 
   function CadastrarVeiculo() {
@@ -199,13 +283,13 @@
     var anoVar = input_ano.value;
     var placaVar = input_placa.value;
 
-    if ( idClienteVar == '#' || marcaVar == '' ||
-        modeloVar == '' ||
-        anoVar == '' ||
-        placaVar == '') {
-        outputVeiculo.innerHTML = 'Preencha campos!'
-        return
-        }
+    if (idClienteVar == '#' || marcaVar == '' ||
+      modeloVar == '' ||
+      anoVar == '' ||
+      placaVar == '') {
+      outputVeiculo.innerHTML = 'Preencha campos!'
+      return
+    }
 
     fetch("/empresas/cadastrarVeiculo", {
       method: "PUT",
@@ -220,7 +304,7 @@
         placa: placaVar
       }),
     })
-      .then(function (resposta) {     
+      .then(function (resposta) {
         marcaVar = '';
         modeloVar = '';
         anoVar = '';
@@ -228,16 +312,15 @@
 
         outputVeiculo.innerHTML = 'Veiculo cadastrado com sucesso!'
 
-        console.log('Veiculo cadastrado', resposta)
       })
       .catch(function (resposta) {
         console.log(`#ERRO: ${resposta}`);
 
         outputVeiculo.innerHTML = 'Falha ao cadastrar o veículo!'
       });
-    }
+  }
 
-  function cadastrarCliente() {
+  function CadastrarCliente() {
     // Dados do cliente:
     var nomeVar = input_nomeCliente.value;
     var emailVar = input_emailCliente.value;
@@ -246,9 +329,6 @@
     var empresaVar = input_empresaCliente.value;
     var cnpjVar = input_cnpjCliente.value;
     var chkEmpresa = input_toEmpresa.checked;
-
-
-
 
     fetch("/empresas/cadastrarCliente", {
       method: "POST",
@@ -266,18 +346,20 @@
         cnpj: cnpjVar
       }),
     })
-      .then(function (resposta) {     
+      .then(function (resposta) {
 
         outputCadastroCliente.innerHTML = 'Cliente cadastrado com sucesso! Agora é póssível seleciona-lo em outras sessões para facilitar a utilização da ferramenta.'
 
-        console.log('Veiculo cadastrado', resposta)
+        // Plota os clientes nos selects da pagina após cadastrar:
+        setTimeout(() => { ListarClientes(); ListarTotalClientesVeiculos(); }, 2500);
+        console.log('Cliente cadastrado', resposta)
       })
       .catch(function (resposta) {
         console.log(`#ERRO: ${resposta}`);
 
         outputCadastroCliente.innerHTML = 'Falha ao cadastrar o cliente! Certifique-se que todas informações estão inseridas corretamente.'
       });
-    }
+  }
 
   function ListarClientes() {
 
@@ -285,7 +367,11 @@
 
     if (sessionStorage.ID_USUARIO == undefined) {
       console.log('ID_USUARIO ESTÁ UNFEDINED')
-    } else {
+      return
+    }
+
+    document.getElementById('select_client').innerHTML = '';
+    document.getElementById('select_clientVeiculo').innerHTML = '';
 
     fetch("/empresas/listar", {
       method: "POST",
@@ -293,15 +379,13 @@
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: sessionStorage.ID_USUARIO      
+        id: sessionStorage.ID_USUARIO
       }),
     })
       .then(function (resposta) {
         resposta.json().then((empresas) => {
           empresas.forEach((empresa) => {
             listaClientes.push(empresa);
-
-            console.log("listaEmpresasCadastradas")
           });
         });
       })
@@ -309,23 +393,340 @@
         console.log(`#ERRO: ${resposta}`);
       });
 
-      // Plottar os clientes
-      setTimeout(() => {
-        var msg = '<option value="#">Selecione um cliente</option>';
+    listaClientes = []
+    // Plottar os clientes
+    setTimeout(() => {
+      console.log("Plotando os clientes nos Select's")
+      var msg = '<option value="#">Selecione um cliente</option>';
 
-        for (let i = 0; i < listaClientes.length; i++) {
-          msg += `
-          <option value="${listaClientes[i].idCliente}">${listaClientes[i].nome}</option>
-          `
-        }
-        console.log(msg)
-        // Select's do Veículo e Orçamento
-        document.getElementById('select_client').innerHTML = msg; 
-        document.getElementById('select_clientVeiculo').innerHTML = msg; 
-      }, 100);
-    }
+      for (let i = 0; i < listaClientes.length; i++) {
+        msg += `
+<option value="${listaClientes[i].idCliente}">${listaClientes[i].nome}</option>
+`
+      }
+      // console.log(msg)
+      // Select's do Veículo e Orçamento
+      document.getElementById('select_client').innerHTML = msg;
+      document.getElementById('select_clientVeiculo').innerHTML = msg;
+    }, 100);
   }
 
+  function ListarVeiculosDoCliente() {
+    var idCliente = select_client.value;
+
+    if (idCliente == '#') {
+      return
+    }
+
+    console.log('Indo para o Fetch de listar os veiculo do cliente')
+
+    listaVeiculos = []
+
+    fetch("/empresas/listarVeiculoCliente", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: idCliente
+      }),
+    })
+      .then(function (resposta) {
+        resposta.json().then((veiculos) => {
+          veiculos.forEach((veiculo) => {
+            console.log(veiculo)
+            console.log(veiculo.resultado)
+            listaVeiculos.push(veiculo);
+
+          });
+          document.getElementById('select_veiculo').innerHTML = '';
+        });
+      })
+
+    setTimeout(() => {
+      console.log('Plotando os veiculos')
+
+      var msg = '<option value="#">Selecione um veiculo</option>';
+      for (let i = 0; i < listaVeiculos.length; i++) {
+        msg += `
+<option value="${listaVeiculos[i].idVeiculo}">${listaVeiculos[i].Veiculo}</option>
+`
+      }
+      // console.log(msg)
+      // Select's do Veículo e Orçamento
+      document.getElementById('select_veiculo').innerHTML = msg;
+    }, 100);
+  }
+
+  function ListarTotalClientesVeiculos() {
+
+    console.log('Indo para o fetch de total de Clientes')
+    fetch("/empresas/buscarTotalClientesVeiculos", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: sessionStorage.ID_USUARIO
+      }),
+    })
+      .then(function (resposta) {
+        resposta.json().then((empresas) => {
+          totalClienteCad.innerHTML = `${empresas[0].TotalC} Clientes cadastrado no sistema`,
+            totalVeiculosCad.innerHTML = `${empresas[0].TotalV} Veiculos cadastrado no sistema`
+        }
+        );
+      })
+      .catch(function (resposta) {
+        console.log(`#ERRO: ${resposta}`);
+      });
+  }
+
+  function ListarOrcamentos() {
+
+    var msg = '';
+
+    fetch(`/empresas/SelecionarOrcCompleto/${id}`, { cache: 'no-store' })
+      .then((resposta) => {
+        resposta.json().then((json) => {
+          // console.log(json)
+          // console.log(json.resultado)
 
 
+          for (let i = 0; i < json.resultado.length; i++) {
+            const elementCliente = json.resultado[i].cliente;
+            const elementStatus = json.resultado[i].status;
+            const elementData = json.resultado[i].data;
+            const elementVeiculo = json.resultado[i].veiculo;
+            const elementTotal = json.resultado[i].total;
+            const elementServicos = json.resultado[i].servicos;
+
+            // Id do Orcamento
+            const elementID = json.resultado[i].id;
+
+            const elementDataFormatada = elementData.split('T')[0];
+            
+            // console.log('ID ORCAMENTO: ', elementID)
+            // console.log(`Cliente: ${elementCliente}`);
+            // console.log(`Status: ${elementStatus}`);
+            // console.log(`Veiculo: ${elementVeiculo}`);
+            // console.log(`Total: ${elementTotal}`);
+            // console.log(`Servicos: ${elementServicos}`);
+            // console.log(`Data: ${elementData}`);
+
+            msg += `
+           <div class="modalOrcamento" id="modalOrcamento${i}">
+            <p id="orc_cliente_${i}"><b>Cliente:</b> ${elementCliente}</p>
+            <p id="Data_${i}"><b>Data do Orçamento:</b> ${elementDataFormatada}</p>
+            <p id="orc_veiculo_${i}"><b>Veículo:</b> ${elementVeiculo}</p>
+            <p id="orc_status_${i}"><b>Status do Orçamento:</b>${elementStatus}</p>
+            <p id="orc_total_${i}"><b>Total:</b> ${elementTotal}</p>
+            <p id="orc_servicos_${i}"><b>Serviços:</b> ${elementServicos}</p>
+            <button onclick="deleteOrcamento(${elementID}, ${elementoDescricao}, ${i})">Deletar</button>
+            <button onclick="updateOrcamento(${elementID}, 'Aprovado')">Aprovado</button>
+            <button onclick="updateOrcamento(${elementID}, 'Concluido')">Concluido</button>
+            <br>
+            <br>
+          </div>
+          `
+          }
+
+          visualizacao.innerHTML = msg;
+
+        })
+      })
+
+  }
+
+  function deleteOrcamento(id, descricao, indexPosicao) {
+
+    fetch(`/empresas/deletarOrcamento/${id}${descricao}`)
+    .then((resposta) => {
+
+    })
+
+
+
+  }
+
+  function updateOrcamento(id, status) {
+
+  }
+
+  function atualizarTodos() {
+    console.log('Atualizando todos os dados')
+    ListarClientes()
+    ListarTotalClientesVeiculos()
+    ListarOrcamentos()
+  }
+
+  function RegistrarOrcamento() {
+    var idVeiculo = select_veiculo.value;
+
+    var diaAtual = new Date().getDate();
+    var mesAtual = new Date().getMonth() + 1;
+    var anoAtual = new Date().getFullYear();
+
+    var dataOrcamento = `${anoAtual}-${mesAtual}-${diaAtual}`;
+
+    var idOrcamento = 0;
+
+    var cadastrouOrcamento = false;
+    var cadastrouServico = false;
+
+    fetch("/empresas/CadastrarOrcamento", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fkVeiculo: idVeiculo,
+        data: dataOrcamento
+      }),
+    })
+      .then(function (resposta) {
+        // Obtem o ID do orçamento do Backend
+        resposta.json().then((json) => {
+          if (json.error) {
+            outputOrcamento.innerHTML = 'ESTE CARRO JÁ POSSUI UM ORÇAMENTO NESTA DATA'
+            return
+          }
+
+          // console.log(json);
+          // console.log(JSON.stringify(json));
+          idOrcamento = json.idOrcamento;
+          for (var i = 0; i < listaServicos.length; i++) {
+            var elementoTipo = listaServicos[i].tipo;
+            var elementoDescricao = listaServicos[i].descricao;
+            var elementoValor = listaServicos[i].valor;
+
+            console.log(`${i}° Fazendo requisição do Serviço`)
+
+            fetch("/empresas/CadastrarServico", {
+              method: 'POST',
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                descricao: elementoDescricao,
+                data: elementoDescricao,
+                valor: elementoValor,
+                tipo: elementoTipo,
+                fkOrcamento: idOrcamento
+              }),
+            })
+            outputOrcamento.innerHTML = 'Orçamento cadastrado com sucesso'
+          }
+        })
+
+        setTimeout(() => {
+          ListarOrcamentos()
+        }, 4000);
+
+
+      })
+      .catch(function (error) {
+        console.log(error)
+        outputOrcamento.innerHTML = error
+      })
+    // console.log(idOrcamento)
+
+    //  console.log('Checando se cadastrou o orcamento: ', cadastrouOrcamento)
+    //  if (cadastrouOrcamento == false) {
+    //   return
+    // }
+  }
+
+  document.body.onload = atualizarTodos();
+
+  const graficoServicos = document.getElementById('myChartServicos');
+  var VarGraficoServicos;
+
+  function plotarGrafico() {
+
+    fetch(`/empresas/selecionarDadosServicos/${id}`, { cache: "no-store" })
+      .then((resposta) => {
+
+        resposta.json().then((dados) => {
+          var funiTotal = dados.resultado[0].total
+          var funiValor = dados.resultado[0].valor
+          var mecaTotal = dados.resultado[1].total
+          var mecaValor = dados.resultado[1].valor
+          var pintTotal = dados.resultado[1].total
+          var pintValor = dados.resultado[1].valor
+
+          VarGraficoServicos = new Chart(graficoServicos, {
+            type: 'bar',
+            data: {
+              labels: ['Funilaria', 'Pintura', 'Mecânica'], // Categorias principais
+              datasets: [
+                {
+                  label: 'Total',
+                  data: [funiTotal, pintTotal, mecaTotal], // Valores para "Total"
+                  backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  borderWidth: 1
+                },
+                {
+                  label: 'Valor',
+                  data: [funiValor, pintValor, mecaValor], // Valores para "Valor"
+                  backgroundColor: 'rgba(153, 102, 255, 0.7)',
+                  borderColor: 'rgba(153, 102, 255, 1)',
+                  borderWidth: 1
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: 'top',
+                },
+                title: {
+                  display: true,
+                  text: 'Desempenho por Categoria'
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: 'Quantidade/Valor'
+                  }
+                }
+              }
+            }
+          });
+          // console.log(listaUsuarios)
+          // console.log(listaUsuarios)
+        })
+      })
+  }
+
+  function atualizarGrafico() {
+
+    fetch(`/empresas/selecionarDadosServicos/${id}`, { cache: "no-store" })
+      .then((resposta) => {
+        resposta.json().then((dados) => {
+          console.log('Dados atualizados: ', dados);
+          var funiTotal = dados.resultado[0].total
+          var funiValor = dados.resultado[0].valor
+          var mecaTotal = dados.resultado[1].total
+          var mecaValor = dados.resultado[1].valor
+          var pintTotal = dados.resultado[1].total
+          var pintValor = dados.resultado[1].valor
+
+          // Exemplo de novos dados
+          VarGraficoServicos.data.datasets[0].data = [totalGato, totalCachorro, totalOutro, totalNenhum];
+
+          // Atualize o gráfico
+          VargraficoPets.update();
+        })
+      })
+  }
+
+  plotarGrafico()
+
+  // setInterval(atualizarGrafico, 10000);
 </script>

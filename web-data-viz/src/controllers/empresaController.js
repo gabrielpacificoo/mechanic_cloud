@@ -3,17 +3,20 @@ var empresaModel = require("../models/empresaModel");
 function buscarOficina(req, res) {
   var idUsuario = req.params.idUsuario;
 
-  empresaModel.buscarOficina(idUsuario).then((resultado) => {
-    if (resultado.length > 0) {
-      res.status(200).json(resultado);
-    } else {
-      res.status(204).json([]);
-    }
-  }).catch(function (erro) {
-    console.log(erro);
-    console.log("Houve um erro ao buscar os aquarios: ", erro.sqlMessage);
-    res.status(500).json(erro.sqlMessage);
-  });
+  empresaModel
+    .buscarOficina(idUsuario)
+    .then((resultado) => {
+      if (resultado.length > 0) {
+        res.status(200).json(resultado);
+      } else {
+        res.status(204).json([]);
+      }
+    })
+    .catch(function (erro) {
+      console.log(erro);
+      console.log("Houve um erro ao buscar os aquarios: ", erro.sqlMessage);
+      res.status(500).json(erro.sqlMessage);
+    });
 }
 
 function cadastrarVeiculo(req, res) {
@@ -23,17 +26,23 @@ function cadastrarVeiculo(req, res) {
   var ano = req.body.ano;
   var placa = req.body.placa;
 
-  empresaModel.cadastrarVeiculo(idCliente, marca, modelo, ano, placa).then((resultado) => {
-    if (resultado.length > 0) {
-      res.status(200).json(resultado);
-    } else {
-      res.status(204).json([]);
-    }
-  }).catch(function (erro) {
-    console.log(erro);
-    console.log("Houve um erro ao cadastrar o veículo do Cliente: ", erro.sqlMessage);
-    res.status(500).json(erro.sqlMessage);
-  });
+  empresaModel
+    .cadastrarVeiculo(idCliente, marca, modelo, ano, placa)
+    .then((resultado) => {
+      if (resultado.length > 0) {
+        res.status(200).json(resultado);
+      } else {
+        res.status(204).json([]);
+      }
+    })
+    .catch(function (erro) {
+      console.log(erro);
+      console.log(
+        "Houve um erro ao cadastrar o veículo do Cliente: ",
+        erro.sqlMessage
+      );
+      res.status(500).json(erro.sqlMessage);
+    });
 }
 
 function cadastrarCliente(req, res) {
@@ -46,50 +55,58 @@ function cadastrarCliente(req, res) {
   empresa = req.body.empresa;
   cnpj = req.body.cnpj;
 
-  empresaModel.cadastrarCliente(idMecanico, nome,email, telefone, cpf).then((resultado) => {
-
-      console.log('Passei o Cadastro do Cliente, indo pro Buscar Cliente')
+  empresaModel
+    .cadastrarCliente(idMecanico, nome, email, telefone, cpf)
+    .then((resultado) => {
+      console.log("Passei o Cadastro do Cliente, indo pro Buscar Cliente");
 
       if (chkEmpresa == true) {
-        empresaModel.buscarCliente(cpf)
-        .then((resultadoCliente) => {
-          if (resultadoCliente.length > 0) {
-            res.status(200).json(resultadoCliente);
-            
-            var idCliente = resultadoCliente[0].idCliente;
-            empresaModel.cadastrarEmpresa(idCliente, empresa, cnpj)
-            .then((resultadoCliente) => {
-              if (resultadoCliente.length > 0) {
-                res.status(200).json(resultadoCliente);
-      
-              } else {
-                res.status(204).json([]);
-              }
-      
-            }).catch(function (erro) {
-              console.log(erro);
-              console.log("Houve um erro ao cadastrar a empresa do Cliente: ", erro.sqlMessage);
-              res.status(500).json(erro.sqlMessage);
-            });
-  
-          } else {
-            res.status(200).json(resultado);
-          }
-  
-        }).catch(function (erro) {
-          console.log(erro);
-          console.log("Houve um erro ao select no ID do Cliente: ", erro.sqlMessage);
-          res.status(500).json(erro.sqlMessage);
-        }); 
+        empresaModel
+          .buscarCliente(cpf)
+          .then((resultadoCliente) => {
+            if (resultadoCliente.length > 0) {
+              res.status(200).json(resultadoCliente);
+
+              var idCliente = resultadoCliente[0].idCliente;
+              empresaModel
+                .cadastrarEmpresa(idCliente, empresa, cnpj)
+                .then((resultadoCliente) => {
+                  if (resultadoCliente.length > 0) {
+                    res.status(200).json(resultadoCliente);
+                  } else {
+                    res.status(204).json([]);
+                  }
+                })
+                .catch(function (erro) {
+                  console.log(erro);
+                  console.log(
+                    "Houve um erro ao cadastrar a empresa do Cliente: ",
+                    erro.sqlMessage
+                  );
+                  res.status(500).json(erro.sqlMessage);
+                });
+            } else {
+              res.status(200).json(resultado);
+            }
+          })
+          .catch(function (erro) {
+            console.log(erro);
+            console.log(
+              "Houve um erro ao select no ID do Cliente: ",
+              erro.sqlMessage
+            );
+            res.status(500).json(erro.sqlMessage);
+          });
       } else {
-        console.log('Cliente não possuí empresa')
+        console.log("Cliente não possuí empresa");
         res.status(204).json([]);
       }
-  }).catch(function (erro) {
-    console.log(erro);
-    console.log("Houve um erro ao cadastrar o Cliente: ", erro.sqlMessage);
-    res.status(500).json(erro.sqlMessage);
-  });
+    })
+    .catch(function (erro) {
+      console.log(erro);
+      console.log("Houve um erro ao cadastrar o Cliente: ", erro.sqlMessage);
+      res.status(500).json(erro.sqlMessage);
+    });
 }
 
 function buscarPorCnpj(req, res) {
@@ -104,6 +121,16 @@ function listar(req, res) {
   var id = req.body.id;
 
   empresaModel.listar(id).then((resultado) => {
+    res.status(200).json(resultado);
+  });
+}
+
+function listarVeiculoCliente(req, res) {
+  var id = req.body.id;
+
+  console.log(id);
+
+  empresaModel.listarVeiculoCliente(id).then((resultado) => {
     res.status(200).json(resultado);
   });
 }
@@ -133,6 +160,167 @@ function cadastrar(req, res) {
   });
 }
 
+function buscarTotalClientesVeiculos(req, res) {
+  var idUsuario = req.body.id;
+
+  empresaModel
+    .buscarClientesVeiculos(idUsuario)
+    .then((resultado) => {
+      console.log(resultado);
+      if (resultado.length > 0) {
+        res.status(200).json(resultado);
+      } else {
+        res.status(204).json([]);
+      }
+    })
+    .catch(function (erro) {
+      console.log(erro);
+      console.log("Houve um erro ao buscar os aquarios: ", erro.sqlMessage);
+      res.status(500).json(erro.sqlMessage);
+    });
+}
+
+function buscarTotalRendaConcluida(req, res) {
+  empresaModel
+    .buscarClientesVeiculos(idUsuario)
+    .then((resultado) => {
+      if (resultado.length > 0) {
+        res.status(200).json(resultado);
+      } else {
+        res.status(204).json([]);
+      }
+    })
+    .catch(function (erro) {
+      console.log(erro);
+      console.log(
+        "Houve um erro ao buscar a renda da oficina: ",
+        erro.sqlMessage
+      );
+      res.status(500).json(erro.sqlMessage);
+    });
+}
+
+// Cadastro de Orçamento completo;
+function CadastrarOrcamento(req, res) {
+  var fkVeiculo = req.body.fkVeiculo;
+  var dataOrcamento = req.body.data;
+  var idOrcamento = 0;
+
+  empresaModel
+    .SelecionarOrcamento(fkVeiculo, dataOrcamento)
+    .then((orcamentos) => {
+      if (orcamentos.length > 0) {
+        res.json({
+          error: true,
+        });
+        return;
+      }
+
+      empresaModel
+        .CadastrarOrcamento(fkVeiculo, dataOrcamento)
+        .then(function () {
+          empresaModel
+            .SelecionarOrcamento(fkVeiculo, dataOrcamento)
+            .then((newOrcamento) => {
+              console.log(newOrcamento);
+              res.json({
+                error: false,
+                idOrcamento: newOrcamento[0].idOrcamento,
+              });
+            });
+        })
+        .catch(function (erro) {
+          console.log(erro);
+          console.log(
+            "Houve um erro ao cadastrar o orçamento: ",
+            erro.sqlMessage
+          );
+          res.status(500).json(erro.sqlMessage);
+        });
+    });
+}
+
+function SelecionarOrcamento(req, res) {
+  var fkVeiculo = req.params.id;
+  var dataOrcamento = req.params.data;
+
+  empresaModel
+    .SelecionarOrcamento(fkVeiculo, dataOrcamento)
+    .then((resultado) => {
+      res.status(200).json(resultado);
+    });
+}
+
+function SelecionarOrcamentoCompleto(req, res) {
+  var id = req.params.id;
+
+  empresaModel.SelecionarOrcamentoCompleto(id).then(function (resultado) {
+    console.log(`\nResultado oficinas: ${JSON.stringify(resultado)}`);
+    res.json({ resultado });
+  });
+}
+
+function selecionarDadosServicos(req, res) {
+  var id = req.params.id;
+
+  empresaModel.selecionarDadosServicos(id).then(function (resultado) {
+    console.log(`\nResultado oficinas: ${JSON.stringify(resultado)}`);
+    res.json({ resultado });
+  });
+}
+
+function CadastrarServico(req, res) {
+  var descricao = req.body.descricao;
+  var valor = req.body.valor;
+  var tipo = req.body.tipo;
+  var fkOrcamento = req.body.fkOrcamento;
+
+  var fkServico = 0;
+
+  empresaModel.CadastrarServico(descricao).then((ok) => {
+    empresaModel.SelecionarServico(descricao).then((resposta) => {
+      fkServico = resposta[0].idServico;
+
+      empresaModel
+        .CadastrarHistorico(fkOrcamento, fkServico, tipo, valor)
+        .then(() => {
+          console.log("Serviço e Histórico cadastraco com Sucesso");
+        });
+    });
+  });
+}
+
+function deletarOrcamento(req, res) {
+  var idOrcamento = req.params.id;
+  var descricao = req.params.descricao;
+
+  empresaModel.deletarOrcamento(idOrcamento)
+  .then((ok) => {
+
+  });
+}
+
+function updateOrcamento(req, res) {
+  var descricao = req.body.descricao;
+  var valor = req.body.valor;
+  var tipo = req.body.tipo;
+  var fkOrcamento = req.body.fkOrcamento;
+
+  var fkServico = 0;
+
+  empresaModel.CadastrarServico(descricao).then((ok) => {
+    empresaModel.SelecionarServico(descricao).then((resposta) => {
+      fkServico = resposta[0].idServico;
+
+      empresaModel
+        .CadastrarHistorico(fkOrcamento, fkServico, tipo, valor)
+        .then(() => {
+          console.log("Serviço e Histórico cadastraco com Sucesso");
+        });
+    });
+  });
+}
+
 module.exports = {
   cadastrarVeiculo,
   cadastrarCliente,
@@ -141,4 +329,14 @@ module.exports = {
   buscarPorId,
   cadastrar,
   listar,
+  listarVeiculoCliente,
+  buscarTotalClientesVeiculos,
+  buscarTotalRendaConcluida,
+  CadastrarOrcamento,
+  SelecionarOrcamento,
+  SelecionarOrcamentoCompleto,
+  CadastrarServico,
+  selecionarDadosServicos,
+  deletarOrcamento,
+  updateOrcamento
 };

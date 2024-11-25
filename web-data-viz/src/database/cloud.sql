@@ -1,4 +1,3 @@
-
 CREATE DATABASE mechanic;
 USE mechanic;
 
@@ -9,7 +8,6 @@ CREATE TABLE usuario (
   senha VARCHAR(45),
   telefone CHAR(12)
 );
-
 
 SELECT idUsuario FROM usuario WHERE nomeCompleto = 'a' and email = 'a' and senha = 1234;
 CREATE TABLE oficina (
@@ -37,8 +35,6 @@ SELECT u.nomeCompleto as Dono,
   FROM oficina as o
   JOIN usuario as u
   ON o.fkUsuario = u.idUsuario;
-
-  SELECT * from usuario;
 
 -- Sessão dos dados de Software da Oficina;
 CREATE TABLE empresa (
@@ -174,18 +170,19 @@ SELECT c.nome as Cliente,
   GROUP BY c.nome, c.email, e.razaoSocial, e.cnpj, h.dataEntrada, h.dataSaida, h.nomeMotorista,h.rg, h.cpf
   ORDER BY h.dataEntrada desc;
 
+
 -- Sistema de Orçamentos
 CREATE TABLE orcamento (
   idOrcamento INT primary key auto_increment,
   dataLancamento DATE,
   orcStatus CHAR(9),
-  CONSTRAINT chkStatus CHECK (orcStatus in ('Pendente', 'Aprovado', 'Concluido'))
+  CONSTRAINT chkStatus CHECK (orcStatus in ('Pendente', 'Aprovado', 'Concluido')),
+  fkVeiculo INT,
+  CONSTRAINT fkOrcamentoVeiculo FOREIGN KEY (fkVeiculo) REFERENCES veiculo(idVeiculo)
 )
 
 CREATE TABLE servico (
   idServico INT PRIMARY KEY AUTO_INCREMENT,
-  fkVeiculo INT,
-  CONSTRAINT fkServicoVeiculo FOREIGN KEY (fkVeiculo) REFERENCES veiculo(idVeiculo),
   descricao VARCHAR(100)
 );
 
@@ -206,7 +203,7 @@ CREATE TABLE historico (
 INSERT INTO orcamento VALUES 
   (default, '2024-01-11', 'Pendente'),
   (default, '2024-01-11', 'Pendente'),
-  (default, '2024-01-11', 'Pendente');
+  (default, '2024-01-11', 'Concluido');
 
 SELECT  * FROM oficina;
 
@@ -258,14 +255,59 @@ SELECT CONCAT(v.marca, ' ',v.modelo, ' ', v.ano) as Veiculo,
 
 # Mostra o Status do Orçamento do Veículo, Serviços e o Custo Total
 SELECT o.orcStatus as Status, 
-  CONCAT(v.marca, ' ',v.modelo, ' ', v.ano) as Veiculo,
-  CONCAT('R$',(SUM(his.valor))) as Total,
-  GROUP_CONCAT(s.descricao)
+  CONCAT(v.marca, ' ',v.modelo, ' ', v.ano) as veiculo,
+  CONCAT('R$',(SUM(his.valor))) as total,
+  GROUP_CONCAT(s.descricao) as serviços
   FROM veiculo as v
-  JOIN servico as s
-  ON s.fkVeiculo = v.idVeiculo
-  JOIN historico as his
-  ON his.fkServico = s.idServico
   JOIN orcamento as o
+  ON o.fkVeiculo = v.idVeiculo
+  JOIN historico as his 
   ON his.fkOrcamento = o.idOrcamento
-  GROUP BY o.orcStatus, v.marca, v.modelo, v.ano;	
+  JOIN servico as s
+  ON his.fkServico = s.idServico
+  WHERE v.fkCliente = 4
+  GROUP BY o.orcStatus, v.marca, v.modelo, v.ano
+
+  SELECT c.nome as Cliente, o.orcStatus as Status, o.dataLancamento as Data, CONCAT(v.marca, ' ',v.modelo, ' ', v.ano) as veiculo,CONCAT('R$',(SUM(his.valor))) as total,GROUP_CONCAT(s.descricao) as serviços FROM veiculo as v JOIN orcamento as o ON o.fkVeiculo = v.idVeiculo JOIN historico as his ON his.fkOrcamento = o.idOrcamento JOIN servico as s ON his.fkServico = s.idServico JOIN cliente as c ON v.fkCliente = c.idCliente WHERE c.fkOficina = 1 GROUP BY c.nome, o.orcStatus, o.dataLancamento, v.marca, v.modelo, v.ano;
+
+SELECT IFNULL(CONCAT('R$',SUM(his.valor)), 'Sem orçamentos/serviços concluidos') as TotalConcluido 
+FROM historico as his 
+JOIN orcamento as o 
+ON his.fkOrcamento = o.idOrcamento 
+WHERE o.OrcStatus = 'Pendente';
+
+select COUNT(c.idCliente) as TotalC,
+  COUNT(v.idVeiculo) as TotalV
+  FROM cliente as c
+  LEFT JOIN veiculo as v
+  ON v.fkCliente = c.idCliente
+  WHERE fkOficina = ${};
+
+SELECT * FROM servico;
+
+SELECT idOrcamento FROM orcamento WHERE fkVeiculo = 7 and dataLancamento = '1231-02-04';
+# Comandos para o cadastro de orçamento
+INSERT INTO orcamento(fkVeiculo, dataLancamento, status) VALUES (${fkVeiculo}, ${dtLanc}, 'Pendente'); 
+
+SELECT idOrcamento from orcamento where fkOrcamento = ${fkVeiculo} and dataLancamento = ${dataOrcamento};
+
+SELECT * FROM cliente as c LEFT JOIN veiculo as v  ON v.fkCliente = c.idCliente;
+
+INSERT INTO servico(descricao) VALUES (${descricao}); 
+
+SELECT idServico from servico;
+INSERT INTO historico(fkOrcamento, fkServico, valor, tipo) VALUES (${Orcamento}, ${fkServico}, ${valor}, ${tipo}) 
+-- }
+
+select * from servico;
+select * from historico;
+
+-- Grafico de Barra
+select his.tipo as servico, COUNT(his.tipo) as total, SUM(his.valor) as valor FROM historico as his JOIN orcamento as o ON his.fkOrcamento = o.idOrcamento JOIN veiculo as v  ON o.fkVeiculo = v.idVeiculo JOIN cliente as c ON v.fkCliente = c.idCliente WHERE c.fkOficina = 1 GROUP BY his.tipo ORDER BY his.tipo asc;
+
+SELECT * FROM orcamento JOIN historico as his on his.fkOrcamento = orcamento.idOrcamento join servico as s on his.fkServico = s.idServico;
+
+-- em ordem: 1, 2 e 3
+DELETE FROM historico WHERE fkOrcamento = 89; 
+DELETE FROM servico WHERE descricao like '%111%'; 
+DELETE FROM orcamento WHERE idOrcamento = 89; 

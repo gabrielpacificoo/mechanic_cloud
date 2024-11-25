@@ -5,6 +5,8 @@
 
 body {
   display: flex;
+  height: 100%;
+  overflow-x: hidden;
 }
 
 body #navegation {
@@ -14,8 +16,8 @@ body #navegation {
   align-content: flex-start;
   justify-content: center;
   width: 25%;
-  height: max-content;
-
+  min-height: 100vh;
+  max-height: auto;
   background-color: #1f4e79;
 }
 
@@ -122,7 +124,7 @@ body #content #veiculos {
 body #content #veiculos .content {
   display: flex;
   flex-wrap: wrap;
-  background-color: #E8E8E8;
+  background-color: #e8e8e8;
   height: 72.5vh;
   padding: 2.5%;
   flex-direction: row;
@@ -149,7 +151,6 @@ body #content #veiculos .content #informacoesVeiculo p {
   color: #404040;
   font-size: 2vh;
   font-weight: 600;
-
 }
 
 body #content #veiculos .content #informacoesVeiculo input,
@@ -173,7 +174,30 @@ body #content #veiculos .content #outputVeiculo {
 }
 
 body #content #veiculos .content button {
-  margin-top: .5%;
+  margin-top: 0.5%;
+}
+/* Section Dash */
+body #content #dashboard {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin: 2.5% 5%;
+}
+
+body #content #dashboard h1 {
+  width: 100%;
+  margin-bottom: 2.5%;
+}
+
+body #content #dashboard p {
+  width: 30%;
+}
+
+body #content #dashboard #graficoServicosFeitoNoMesEDia {
+  width: 40vw;
 }
 
 /* Section Cliente */
@@ -187,7 +211,7 @@ body #content #clientes .content {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  
+
   padding: 2.5%;
   width: 100%;
 
@@ -283,4 +307,79 @@ body #content #clientes .content .content_empresa input[type="checkbox"] {
   border-radius: 0px;
   width: 2rem;
   height: 2rem;
+}
+
+body #content #orcamentos,
+body #content #orcamentos #cadastro,
+body #content #orcamentos #orcViz #visualizacao {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+body #content #orcamentos h1 {
+  margin: 2.5% 5%;
+}
+
+body #content #orcamentos #cadastro,
+body #content #orcamentos #orcViz {
+  padding: 2.5%;
+  background-color: #e8e8e8;
+  margin: 2.5% 5%;
+}
+
+body #content #orcamentos #cadastro h1 {
+  width: 100%;
+}
+
+body #content #orcamentos #cadastro #divSelects {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 5%;
+}
+
+body #content #orcamentos textarea,
+body #content #orcamentos select,
+body #content #orcamentos input {
+  appearance: none;
+  border: none;
+
+  margin-right: 1vw;
+  width: 20vw;
+  padding: 2vh 1vw;
+}
+
+body #content #orcamentos #cadastro #allService {
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  margin-bottom: 5%;
+}
+
+body #content #orcamentos #cadastro #allService p {
+  margin: 2.5% 0%;
+}
+
+body #content #orcamentos #cadastro #allService #modalServico {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+}
+
+body #content #orcamentos #cadastro #allService #servicos {
+  width: 50%;
+}
+
+body #content #orcamentos #cadastro p {
+  display: flex;
+  align-items: center;
+  margin-right: 2.5%;
+}
+
+body #content #orcamentos #cadastro button {
+  width: 20vw;
+  margin-top: 5%;
+}
+
+body #content #orcamentos #orcViz #visualizacao .modalOrcamento {
+  width: 20vw;
 }
