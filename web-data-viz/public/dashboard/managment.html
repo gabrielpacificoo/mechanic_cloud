@@ -39,16 +39,21 @@
   <div id="content">
     <div id="dashboard">
       <h1>Análise de informações</h1>
+      <div class="graphs">  
+        <div class="graph" id="graficoServicosFeitoNoMesEDia">
+          <canvas id="myChartServicos"></canvas>
+        </div>
+        <div class="graph" id="graficoServicosFeitoNoMesEDia">
+          <canvas id="myChartValor"></canvas>
+        </div>
+      </div>
       <div id="kpiClientes">
-        <h4 id="totalClienteCad">10 Clientes cadastrado no sistema</h4>
-        <h4 id="totalVeiculosCad">7 Veiculos cadastrado no sistema</h4>
-        <!-- <h4 id="totalVeiculosOrc">2 Veiculos na oficina</h4>
-        <h4 id="totalRendaMes">R$1500 de Receita neste mês</h4> -->
+        <div id="totalClienteCad">10 Clientes cadastrado no sistema</div>
+        <div id="totalVeiculosCad">7 Veiculos cadastrado no sistema</div>
+        <!-- <h4 id="totalVeiculosOrc">2 Veiculos na oficina</h4> -->
+        <div id="totalRendaMes">R$1500 de Receita neste mês</div>
       </div>
 
-      <div class="graph" id="graficoServicosFeitoNoMesEDia">
-        <canvas id="myChartServicos"></canvas>
-      </div>
 
     </div>
 
@@ -203,7 +208,7 @@
   nomeEmpresa.innerHTML = sessionStorage.NOME_EMPRESA;
 
   document.body.onload = chkUndefined();
-  document.body.onload = ListarClientes();
+  // document.body.onload = ListarClientes();
 
   input_toEmpresa.checked = false;
   containerEmpresa.style.display = 'none'
@@ -482,6 +487,22 @@
       });
   }
 
+  function ListarTotalRendaConcluida() {
+    
+    fetch(`/empresas/buscarTotalRendaConcluida/${id}`, {cache: 'no-store'})
+    .then((resposta) => {
+      resposta.json().then((json) => {
+        var total = json.resultado[0].total;
+
+        if (total == null) {
+          total = 0;
+        }
+
+        totalRendaMes.innerHTML = `Renda de R$${total} por orçamentos concluídos`
+      })
+    })
+  }
+
   function ListarOrcamentos() {
 
     var msg = '';
@@ -505,7 +526,7 @@
             const elementID = json.resultado[i].id;
 
             const elementDataFormatada = elementData.split('T')[0];
-            
+
             // console.log('ID ORCAMENTO: ', elementID)
             // console.log(`Cliente: ${elementCliente}`);
             // console.log(`Status: ${elementStatus}`);
@@ -522,7 +543,7 @@
             <p id="orc_status_${i}"><b>Status do Orçamento:</b>${elementStatus}</p>
             <p id="orc_total_${i}"><b>Total:</b> ${elementTotal}</p>
             <p id="orc_servicos_${i}"><b>Serviços:</b> ${elementServicos}</p>
-            <button onclick="deleteOrcamento(${elementID}, ${elementoDescricao}, ${i})">Deletar</button>
+            <button onclick="deleteOrcamento(${elementID}, ${i})">Deletar</button>
             <button onclick="updateOrcamento(${elementID}, 'Aprovado')">Aprovado</button>
             <button onclick="updateOrcamento(${elementID}, 'Concluido')">Concluido</button>
             <br>
@@ -538,12 +559,28 @@
 
   }
 
-  function deleteOrcamento(id, descricao, indexPosicao) {
+  function atualizarTodos() {
+    console.log('Atualizando todos os dados')
+    ListarClientes()
+    ListarTotalClientesVeiculos()
+    ListarTotalRendaConcluida()
+    ListarOrcamentos()
+  }
 
-    fetch(`/empresas/deletarOrcamento/${id}${descricao}`)
-    .then((resposta) => {
+  function deleteOrcamento(idOrc, indexPosicao) {
 
+    fetch(`/empresas/deletarOrcamento/${idOrc}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      }
     })
+      .then((resposta) => {
+        resposta.json().then((json) => {
+          alert(json.mensagem)
+          atualizarTodos()
+        })
+      })
 
 
 
@@ -551,13 +588,18 @@
 
   function updateOrcamento(id, status) {
 
-  }
-
-  function atualizarTodos() {
-    console.log('Atualizando todos os dados')
-    ListarClientes()
-    ListarTotalClientesVeiculos()
-    ListarOrcamentos()
+    fetch(`/empresas/updateOrcamento/${id}/${status}`, {
+      method: 'PUT',
+      headers: {
+        "Content-Type": "application/json"
+      },
+    })
+    .then((resposta) => {
+      resposta.json().then(json => {
+        alert(json.mensagem);
+        atualizarTodos()
+      })
+    })
   }
 
   function RegistrarOrcamento() {
@@ -640,7 +682,9 @@
   document.body.onload = atualizarTodos();
 
   const graficoServicos = document.getElementById('myChartServicos');
+  const graficoValores = document.getElementById('myChartValor');
   var VarGraficoServicos;
+  var VarGraficoValores;
 
   function plotarGrafico() {
 
@@ -648,25 +692,43 @@
       .then((resposta) => {
 
         resposta.json().then((dados) => {
-          var funiTotal = dados.resultado[0].total
-          var funiValor = dados.resultado[0].valor
-          var mecaTotal = dados.resultado[1].total
-          var mecaValor = dados.resultado[1].valor
-          var pintTotal = dados.resultado[1].total
-          var pintValor = dados.resultado[1].valor
 
-          VarGraficoServicos = new Chart(graficoServicos, {
+          if (dados.resultado.length < 1) {
+            console.log('Sem orçamentos')
+            return
+          }
+
+          console.log(dados)
+
+          var funiTotal = 0;
+          var funiValor = 0;
+          var mecaTotal = 0;
+          var mecaValor = 0;
+          var pintTotal = 0;
+          var pintValor = 0;
+
+          if (dados.resultado[0] != undefined) {
+            funiTotal = dados.resultado[0].total
+            funiValor = dados.resultado[0].valor
+          }
+
+          if (dados.resultado[1] != undefined) {
+            mecaTotal = dados.resultado[1].total
+            mecaValor = dados.resultado[1].valor
+          }
+
+          if (dados.resultado[2] != undefined) {
+            pintTotal = dados.resultado[2].total
+            pintValor = dados.resultado[2].valor
+          }
+
+
+
+          VarGraficoValores = new Chart(graficoValores, {
             type: 'bar',
             data: {
               labels: ['Funilaria', 'Pintura', 'Mecânica'], // Categorias principais
               datasets: [
-                {
-                  label: 'Total',
-                  data: [funiTotal, pintTotal, mecaTotal], // Valores para "Total"
-                  backgroundColor: 'rgba(75, 192, 192, 0.7)',
-                  borderColor: 'rgba(75, 192, 192, 1)',
-                  borderWidth: 1
-                },
                 {
                   label: 'Valor',
                   data: [funiValor, pintValor, mecaValor], // Valores para "Valor"
@@ -692,7 +754,43 @@
                   beginAtZero: true,
                   title: {
                     display: true,
-                    text: 'Quantidade/Valor'
+                    text: 'Valor'
+                  }
+                }
+              }
+            }
+          });
+          VarGraficoServicos = new Chart(graficoServicos, {
+            type: 'line',
+            data: {
+              labels: ['Funilaria', 'Pintura', 'Mecânica'], // Categorias principais
+              datasets: [
+                {
+                  label: 'Total',
+                  data: [funiTotal, pintTotal, mecaTotal], // Valores para "Total"
+                  backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  borderWidth: 1
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: 'top',
+                },
+                title: {
+                  display: true,
+                  text: 'Desempenho por Categoria'
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: 'Quantidade'
                   }
                 }
               }
@@ -709,24 +807,47 @@
     fetch(`/empresas/selecionarDadosServicos/${id}`, { cache: "no-store" })
       .then((resposta) => {
         resposta.json().then((dados) => {
+
+          if (dados.resultado.length < 1) {
+            console.log('Sem dados de Serviços')
+            return
+          }
           console.log('Dados atualizados: ', dados);
-          var funiTotal = dados.resultado[0].total
-          var funiValor = dados.resultado[0].valor
-          var mecaTotal = dados.resultado[1].total
-          var mecaValor = dados.resultado[1].valor
-          var pintTotal = dados.resultado[1].total
-          var pintValor = dados.resultado[1].valor
+          var funiTotal = 0;
+          var funiValor = 0;
+          var mecaTotal = 0;
+          var mecaValor = 0;
+          var pintTotal = 0;
+          var pintValor = 0;
+
+          if (dados.resultado[0] != undefined) {
+            funiTotal = dados.resultado[0].total
+            funiValor = dados.resultado[0].valor
+          }
+
+          if (dados.resultado[1] != undefined) {
+            mecaTotal = dados.resultado[1].total
+            mecaValor = dados.resultado[1].valor
+          }
+
+          if (dados.resultado[2] != undefined) {
+            pintTotal = dados.resultado[2].total
+            pintValor = dados.resultado[2].valor
+          }
+
 
           // Exemplo de novos dados
-          VarGraficoServicos.data.datasets[0].data = [totalGato, totalCachorro, totalOutro, totalNenhum];
+          VarGraficoServicos.data.datasets[0].data = [funiTotal, pintTotal, mecaTotal];
+          VarGraficoValores.data.datasets[0].data = [funiValor, funiValor, funiTotal];
 
           // Atualize o gráfico
-          VargraficoPets.update();
+          VarGraficoServicos.update();
+          VarGraficoValores.update();
         })
       })
   }
 
   plotarGrafico()
 
-  // setInterval(atualizarGrafico, 10000);
+  // setInterval(atualizarGrafico, 1000);
 </script>

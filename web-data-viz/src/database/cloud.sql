@@ -101,18 +101,6 @@ CREATE TABLE veiculo (
   placa CHAR(7)
 );
 
--- Entrada & Saída de veiculosx'  
-CREATE TABLE hospedagem (
-  idHospedagem INT primary key auto_increment,
-  fkVeiculo INT,
-  CONSTRAINT fkVeiculoHospedagem FOREIGN KEY (fkVeiculo) REFERENCES veiculo(idVeiculo),
-  dataEntrada DATE,
-  dataSaida DATE,
-  nomeMotorista VARCHAR(60),
-  rg CHAR(9),
-  cpf CHAR(9)
-)
-
 SELECT * from veiculo;
 
 -- Veículos associados a clientes
@@ -134,14 +122,6 @@ INSERT INTO veiculo (fkCliente, marca, modelo, ano, placa) VALUES
 select * from veiculo;
 
 -- Associando hospedagens a alguns veículos
-INSERT INTO hospedagem (fkVeiculo, dataEntrada, dataSaida, nomeMotorista, rg, cpf) VALUES 
-(1, '2024-01-05', '2024-01-10', 'João Almeida', '123456789', '111223330'),
-(2, '2024-01-07', '2024-01-12', 'Mariana Silva', '234567890', '223344411'),
-(3, '2024-01-09', '2024-01-14', 'Pedro Rocha', '345678901', '334445522'),
-(4, '2024-01-11', '2024-01-16', 'Larissa Costa', '456789012', '445566633'),
-(5, '2024-01-13', '2024-01-18', 'Mariana Silva', '567890123', '556667744'),
-(6, '2024-01-15', '2024-01-20', 'Pedro Rocha', '678901234', '667778885');
-
 SELECT v.idVeiculo,
   CONCAT(v.marca, ' - ', v.modelo,', ', v.ano, ' (',v.placa,')') as Veiculo,
   h.dataEntrada as Entrada,
@@ -307,7 +287,21 @@ select his.tipo as servico, COUNT(his.tipo) as total, SUM(his.valor) as valor FR
 
 SELECT * FROM orcamento JOIN historico as his on his.fkOrcamento = orcamento.idOrcamento join servico as s on his.fkServico = s.idServico;
 
--- em ordem: 1, 2 e 3
-DELETE FROM historico WHERE fkOrcamento = 89; 
-DELETE FROM servico WHERE descricao like '%111%'; 
-DELETE FROM orcamento WHERE idOrcamento = 89; 
+delete from orcamento;
+-- Selecionar os ID's dos serviços
+SELECT * from servico as s JOIN historico as his ON his.fkServico = s.idServico;
+/* 
+SERVICO 44, 59, 58 E 57
+ */
+
+-- Deletar do historico onde as fk é o Id do Orçamento
+DELETE FROM historico WHERE fkOrcamento = 96;
+
+-- Deletar aonde o ID é dos serviços selecionados com base no orçamento
+DELETE FROM servico WHERE idServico = 38; 
+DELETE FROM servico WHERE idServico = 39; 
+DELETE FROM servico WHERE idServico = 17; 
+DELETE FROM servico WHERE idServico = 18 
+
+-- E por final, deletar o orçamento 
+DELETE FROM orcamento WHERE idOrcamento = 96; 

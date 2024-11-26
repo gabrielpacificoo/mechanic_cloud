@@ -69,6 +69,15 @@ function listarVeiculoCliente(id) {
   return database.executar(instrucaoSql);
 }
 
+function buscarTotalRendaConcluida(idOficina) {
+  var instrucaoSql = `SELECT SUM(his.valor) as total FROM historico as his JOIN orcamento as o ON his.fkOrcamento = o.idOrcamento JOIN veiculo as v ON o.fkVeiculo = v.idVeiculo JOIN cliente as c ON v.fkCliente = c.idCliente JOIN oficina as ofc ON c.fkOficina = ofc.idOficina WHERE o.orcStatus = 'Concluido' and ofc.idOficina = ${idOficina};
+`;
+  
+  console.log(instrucaoSql);
+
+  return database.executar(instrucaoSql);
+}
+
 function buscarPorCnpj(cnpj) {
   var instrucaoSql = `SELECT * FROM empresa WHERE cnpj = '${cnpj}'`;
 
@@ -108,6 +117,14 @@ function SelecionarOrcamentoCompleto(idOficina) {
   return comando
 }
 
+function SelecionarIDsServicos(idOrcamento) {
+  var instrucaoSql = `SELECT idServico from servico as s JOIN historico as his ON his.fkServico = s.idServico where his.fkOrcamento = ${idOrcamento};`;
+
+  console.log('EXECUTANDO NO MYSQL: ', instrucaoSql)
+
+  return database.executar(instrucaoSql);
+}
+
 function selecionarDadosServicos(idOficina) {
   var instrucaoSql = `select his.tipo as servico, COUNT(his.tipo) as total, SUM(his.valor) as valor FROM historico as his JOIN orcamento as o ON his.fkOrcamento = o.idOrcamento JOIN veiculo as v  ON o.fkVeiculo = v.idVeiculo JOIN cliente as c ON v.fkCliente = c.idCliente WHERE c.fkOficina = ${idOficina} GROUP BY his.tipo ORDER BY his.tipo asc;`;
 
@@ -136,6 +153,39 @@ function CadastrarHistorico(fkOrcamento, fkServico, tipo, valor) {
   return database.executar(instrucaoSql);
 }
 
+function deleteHistorico(idOrcamento) {
+  var instrucaoSql = `DELETE FROM historico WHERE fkOrcamento = ${idOrcamento};`
+
+  console.log('REALIZANDO O COMANDO: ', instrucaoSql)
+
+  return database.executar(instrucaoSql)
+}
+
+function deleteServico(idServico) {
+  var instrucaoSql = `DELETE FROM servico WHERE idServico = ${idServico};`
+
+  console.log('REALIZANDO O COMANDO: ', instrucaoSql)
+
+  return database.executar(instrucaoSql)
+}
+
+function deleteOrcamento(idOrcamento) {
+  var instrucaoSql = `DELETE FROM orcamento WHERE idOrcamento = ${idOrcamento};`
+
+  console.log('REALIZANDO O COMANDO: ', instrucaoSql)
+
+  return database.executar(instrucaoSql)
+}
+
+function updateOrcamento(idOrcamento, status) {
+  var instrucaoSql = `UPDATE orcamento SET orcStatus = '${status}' WHERE idOrcamento = ${idOrcamento}`
+
+  console.log('REALIZANDO O COMANDO: ', instrucaoSql)
+
+  return database.executar(instrucaoSql)
+}
+
+
 module.exports = {
   cadastrarVeiculo,
   cadastrarCliente,
@@ -155,4 +205,10 @@ module.exports = {
   SelecionarServico,
   CadastrarHistorico,
   selecionarDadosServicos,
+  SelecionarIDsServicos,
+  buscarTotalRendaConcluida,
+  deleteHistorico,
+  deleteServico,
+  deleteOrcamento,
+  updateOrcamento,
 };

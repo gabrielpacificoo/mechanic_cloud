@@ -181,11 +181,13 @@ function buscarTotalClientesVeiculos(req, res) {
 }
 
 function buscarTotalRendaConcluida(req, res) {
+  var idOficina = req.params.id;
+
   empresaModel
-    .buscarClientesVeiculos(idUsuario)
+    .buscarTotalRendaConcluida(idOficina)
     .then((resultado) => {
       if (resultado.length > 0) {
-        res.status(200).json(resultado);
+        res.status(200).json({resultado});
       } else {
         res.status(204).json([]);
       }
@@ -290,35 +292,59 @@ function CadastrarServico(req, res) {
   });
 }
 
-function deletarOrcamento(req, res) {
+function deletarOrcamentoCompleto(req, res) {
   var idOrcamento = req.params.id;
-  var descricao = req.params.descricao;
+  // hist orc servico
 
-  empresaModel.deletarOrcamento(idOrcamento)
-  .then((ok) => {
+  deletarHistorico(idOrcamento).then(() => {
+    deletarOrcamento(idOrcamento).then(() => {
+      deletarServico(idOrcamento, res);
+    }  );
+  });
+}
 
+function deletarOrcamento(id) {
+  return empresaModel.deleteOrcamento(id);
+
+  // empresaModel.deletarOrcamento(idOrcamento)
+  // .then((ok) => {
+  // });
+}
+
+function deletarHistorico(id) {
+  return empresaModel.deleteHistorico(id);
+}
+
+function deletarServico(id, res) {
+  empresaModel.SelecionarIDsServicos(id).then((resposta) => {
+    console.log(resposta);
+
+    for (var i = 0; i < resposta.length; i++) {
+      var servicoAtual = resposta[i].idServico;
+
+      empresaModel.deleteServico(servicoAtual).then(() => {
+        console.log(`${i + 1}° Serviço deletado`);
+      });
+    }
+
+    res.json({
+      mensagem: "Exclusão realizada com sucesso",
+    });
   });
 }
 
 function updateOrcamento(req, res) {
-  var descricao = req.body.descricao;
-  var valor = req.body.valor;
-  var tipo = req.body.tipo;
-  var fkOrcamento = req.body.fkOrcamento;
+  var id = req.params.id;
+  var status = req.params.status;
 
-  var fkServico = 0;
+  console.log(id, status)
 
-  empresaModel.CadastrarServico(descricao).then((ok) => {
-    empresaModel.SelecionarServico(descricao).then((resposta) => {
-      fkServico = resposta[0].idServico;
-
-      empresaModel
-        .CadastrarHistorico(fkOrcamento, fkServico, tipo, valor)
-        .then(() => {
-          console.log("Serviço e Histórico cadastraco com Sucesso");
-        });
-    });
-  });
+  empresaModel.updateOrcamento(id, status)
+  .then(() => {
+    res.json({
+      mensagem: "Status alterado com sucesso"
+    })
+  })
 }
 
 module.exports = {
@@ -338,5 +364,7 @@ module.exports = {
   CadastrarServico,
   selecionarDadosServicos,
   deletarOrcamento,
-  updateOrcamento
+  deletarHistorico,
+  updateOrcamento,
+  deletarOrcamentoCompleto,
 };

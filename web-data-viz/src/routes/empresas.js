@@ -28,6 +28,9 @@ router.post("/cadastrar", function (req, res) {
     empresaController.cadastrar(req, res);
 })
 
+router.get("/buscarTotalRendaConcluida/:id", function (req, res) {
+  empresaController.buscarTotalRendaConcluida(req, res);
+});
 router.get("/buscar", function (req, res) {
     empresaController.buscarPorCnpj(req, res);
 });
@@ -44,9 +47,6 @@ router.post("/buscarTotalClientesVeiculos", function (req, res) {
   empresaController.buscarTotalClientesVeiculos(req, res);
 });
 
-router.post("/buscarTotalRendaConcluida", function (req, res) {
-  empresaController.buscarTotalRendaConcluida(req, res);
-});
 
 router.post("/listarVeiculoCliente", function (req, res) {
   empresaController.listarVeiculoCliente(req, res);
@@ -65,10 +65,10 @@ router.post("/CadastrarServico", function (req, res) {
 });
 
 router.delete("/deletarOrcamento/:id", function (req, res) {
-  empresaController.deletarOrcamento(req, res);
+  empresaController.deletarOrcamentoCompleto(req, res);
 })
 
-router.put("/updateOrcamento/:id", function (req, res) {
+router.put("/updateOrcamento/:id/:status", function (req, res) {
   empresaController.updateOrcamento(req, res);
 })
 
