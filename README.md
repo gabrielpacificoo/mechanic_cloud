@@ -1,4 +1,4 @@
-# machanic_cloud
+# maechanic_cloud
 
 Nosso projeto possuí o objetivo de facilitar os processos de gestão dentro de uma oficina automotiva, com o intuíto de diminuir tempo em processos administrativo e aumentar o tempo dedicado para a produção em sua oficina!
 
