@@ -1,246 +1,149 @@
-CREATE DATABASE mechanic;
-USE mechanic;
+-- Criação do banco de dados
+DROP DATABASE IF EXISTS mechanic_cloud;
+CREATE DATABASE mechanic_cloud;
+USE mechanic_cloud;
 
-CREATE TABLE usuario (
-  idUsuario INT primary key auto_increment,
-  nomeCompleto VARCHAR(60),
-  email VARCHAR(60),
-  senha VARCHAR(45),
-  telefone CHAR(12)
+-- 1. Tabela estado
+CREATE TABLE estado (
+    id_estado BIGINT PRIMARY KEY,
+    estado VARCHAR(45)
 );
 
+-- 2. Tabela cidade
+CREATE TABLE cidade (
+    id_cidade BIGINT PRIMARY KEY,
+    cidade VARCHAR(45),
+    fk_estado BIGINT,
+    FOREIGN KEY (fk_estado) REFERENCES estado(id_estado)
+);
+
+-- 3. Tabela endereco
+CREATE TABLE endereco (
+    id_endereco BIGINT PRIMARY KEY,
+    cep CHAR(9),
+    logradouro VARCHAR(60),
+    numero VARCHAR(10),
+    complemento VARCHAR(45),
+    unidade VARCHAR(4),
+    bairro VARCHAR(45),
+    fk_cidade BIGINT,
+    FOREIGN KEY (fk_cidade) REFERENCES cidade(id_cidade)
+);
+
+-- 4. Tabela oficina
 CREATE TABLE oficina (
-  idOficina INT primary key auto_increment,
-  fkUsuario INT,
-  CONSTRAINT fkOficinaUsuario FOREIGN KEY (fkUsuario) REFERENCES usuario(idUsuario),
-  nome VARCHAR(60),
-  cnpj CHAR(14)
+    id_oficina BIGINT PRIMARY KEY,
+    oficina VARCHAR(45),
+    razao_social VARCHAR(45),
+    cnpj CHAR(14),
+    fk_endereco BIGINT,
+    FOREIGN KEY (fk_endereco) REFERENCES endereco(id_endereco)
 );
 
-INSERT INTO usuario VALUES
-  (DEFAULT, 'Roberto Cruz Dias', 'roberto@flexcars.com', '123@#Roberto', '11922346211'),
-  (DEFAULT, 'Francisco Geosmar', 'geo@reformadora.com', '123@#Geosmar', '11951347866');
+-- 5. Tabela fabricante
+CREATE TABLE fabricante (
+    id_fabricante BIGINT PRIMARY KEY,
+    fabricante VARCHAR(45),
+    sigla VARCHAR(4),
+    data_criacao DATE,
+    data_atualizacao DATE
+);
 
-INSERT INTO oficina VALUES 
-  (DEFAULT, 1, 'Flex Mecanica', '11222333000199'),
-  (DEFAULT, 2, 'Geosmar Reformadora', '22555333000177');
+-- 6. Tabela modelo
+CREATE TABLE modelo (
+    id_modelo BIGINT PRIMARY KEY,
+    modelo VARCHAR(45),
+    ano_modelo YEAR,
+    ano_fabricacao YEAR,
+    fk_fabricante BIGINT,
+    FOREIGN KEY (fk_fabricante) REFERENCES fabricante(id_fabricante)
+);
 
--- Select para ver o Dono e suas oficinas
-SELECT u.nomeCompleto as Dono,
-  u.email as 'E-mail',
-  u.senha as Senha,
-  o.nome as Oficina,
-  o.cnpj as CNPJ
-  FROM oficina as o
-  JOIN usuario as u
-  ON o.fkUsuario = u.idUsuario;
-
--- Sessão dos dados de Software da Oficina;
+-- 7. Tabela empresa
 CREATE TABLE empresa (
-  idEmpresa INT primary key auto_increment,
-  razaoSocial CHAR(60),
-  cnpj CHAR(14)
-)
-
-CREATE TABLE cliente (
-  idCliente INT primary key auto_increment,
-  fkEmpresa INT,
-  CONSTRAINT fkEmpresaCliente FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa),
-  fkOficina INT,
-  CONSTRAINT fkOficinaCliente FOREIGN KEY (fkOficina) REFERENCES oficina(idOficina),
-  nome VARCHAR(60),
-  email VARCHAR(60),
-  telefone CHAR(12)
+    id_empresa BIGINT PRIMARY KEY,
+    razao_social VARCHAR(45),
+    cnpj CHAR(14),
+    status BOOLEAN,
+    data_modificacao DATE,
+    email VARCHAR(45),
+    fk_oficina BIGINT,
+    FOREIGN KEY (fk_oficina) REFERENCES oficina(id_oficina)
 );
 
-INSERT INTO empresa (razaoSocial, cnpj) VALUES 
-('Alpha Tech Solutions', '12345678000101'),
-('Beta Innovators', '23456789000102'),
-('Gamma Enterprises', '34567890000103'),
-('Delta Dynamics', '45678900000104');
+-- 8. Tabela filial
+CREATE TABLE filial (
+    id_filial BIGINT PRIMARY KEY,
+    status BOOLEAN,
+    data_cadastro DATE,
+    fk_endereco BIGINT,
+    fk_empresa BIGINT,
+    FOREIGN KEY (fk_endereco) REFERENCES endereco(id_endereco),
+    FOREIGN KEY (fk_empresa) REFERENCES empresa(id_empresa)
+);
 
-SELECT * from empresa;
--- Clientes com empresa
-INSERT INTO cliente (fkEmpresa, fkOficina, nome, email, telefone) VALUES 
-(1, 1, 'João Almeida', 'joao.almeida@example.com', '11987654321'),
-(2, 1, 'Mariana Silva', 'mariana.silva@example.com', '21987654322'),
-(3, 2, 'Pedro Rocha', 'pedro.rocha@example.com', '31987654323'),
-(4, 2, 'Larissa Costa', 'larissa.costa@example.com', '41987654324');
+-- 9. Tabela usuario
+CREATE TABLE usuario (
+    id_usuario BIGINT PRIMARY KEY,
+    nome VARCHAR(65),
+    sobrenome VARCHAR(65),
+    data_nascimento DATE,
+    cpf CHAR(9),
+    senha VARCHAR(45),
+    fk_oficina BIGINT,
+    FOREIGN KEY (fk_oficina) REFERENCES oficina(id_oficina)
+);
 
--- Clientes sem empresa
-INSERT INTO cliente (fkEmpresa, fkOficina, nome, email, telefone) VALUES 
-(NULL, 2, 'Rafael Mendes', 'rafael.mendes@example.com', '51987654325'),
-(NULL, 1, 'Julia Martins', 'julia.martins@example.com', '61987654326');
-
-
-SELECT * from cliente;
--- Select para ver 
-SELECT c.nome as Cliente,
-  c.email as 'E-mail',
-  c.telefone as Telefone,
-  IFNULL(e.razaoSocial, 'Sem empresa') as Empresa,
-  IFNULL(e.cnpj, '') as CNPJ
-  FROM cliente as c
-  LEFT JOIN empresa as e
-  ON c.fkEmpresa = e.idEmpresa;
-
+-- 10. Tabela veiculo
 CREATE TABLE veiculo (
-  idVeiculo INT primary key auto_increment,
-  fkCliente INT,
-  CONSTRAINT fkVeiculoCliente FOREIGN KEY (fkCliente) REFERENCES cliente(idCliente),
-  marca VARCHAR(45),
-  modelo VARCHAR(45),
-  ano YEAR,
-  placa CHAR(7)
+    id_veiculo BIGINT PRIMARY KEY,
+    placa VARCHAR(10),
+    data_cadastro DATETIME,
+    data_atualizacao DATETIME,
+    data_ultima_visita DATE,
+    fk_modelo BIGINT,
+    fk_filial BIGINT,
+    fk_empresa BIGINT,
+    FOREIGN KEY (fk_modelo) REFERENCES modelo(id_modelo),
+    FOREIGN KEY (fk_filial) REFERENCES filial(id_filial),
+    FOREIGN KEY (fk_empresa) REFERENCES empresa(id_empresa)
 );
 
--- Entrada & Saída de veiculos
-CREATE TABLE hospedagem (
-  idHospedagem INT primary key auto_increment,
-  fkVeiculo INT,
-  CONSTRAINT fkVeiculoHospedagem FOREIGN KEY (fkVeiculo) REFERENCES veiculo(idVeiculo),
-  dataEntrada DATE,
-  dataSaida DATE,
-  nomeMotorista VARCHAR(60),
-  rg CHAR(9),
-  cpf CHAR(9)
-)
+-- 11. Tabela ordem_servico
+CREATE TABLE ordem_servico (
+    id_ordem_servico BIGINT PRIMARY KEY,
+    data_entrada DATE,
+    data_saida_prevista DATE,
+    data_saida_efetiva DATE,
+    status VARCHAR(45),
+    descricao_problema VARCHAR(400),
+    valor_total DECIMAL(10,2),
+    fk_veiculo BIGINT,
+    fk_filial BIGINT,
+    fk_empresa BIGINT,
+    FOREIGN KEY (fk_veiculo) REFERENCES veiculo(id_veiculo),
+    FOREIGN KEY (fk_filial) REFERENCES filial(id_filial),
+    FOREIGN KEY (fk_empresa) REFERENCES empresa(id_empresa)
+);
 
--- Veículos associados a clientes
-INSERT INTO veiculo (fkCliente, marca, modelo, ano, placa) VALUES 
-(1, 'Toyota', 'Corolla', 2019, 'ABC1234'),
-(2, 'Honda', 'Civic', 2020, 'DEF5678'),
-(3, 'Ford', 'Focus', 2018, 'GHI9012'),
-(4, 'Chevrolet', 'Cruze', 2021, 'JKL3456'),
-(2, 'Hyundai', 'Elantra', 2017, 'MNO7890'),
-(3, 'Nissan', 'Sentra', 2016, 'PQR1234');
-
--- Veículos sem associação a clientes
-INSERT INTO veiculo (fkCliente, marca, modelo, ano, placa) VALUES 
-(NULL, 'Volkswagen', 'Jetta', 2015, 'STU5678'),
-(NULL, 'Kia', 'Optima', 2014, 'VWX9012'),
-(NULL, 'Mazda', '3', 2013, 'YZA3456'),
-(NULL, 'Subaru', 'Impreza', 2012, 'BCD7890');
-
-select * from veiculo;
-
--- Associando hospedagens a alguns veículos
-INSERT INTO hospedagem (fkVeiculo, dataEntrada, dataSaida, nomeMotorista, rg, cpf) VALUES 
-(1, '2024-01-05', '2024-01-10', 'João Almeida', '123456789', '111223330'),
-(2, '2024-01-07', '2024-01-12', 'Mariana Silva', '234567890', '223344411'),
-(3, '2024-01-09', '2024-01-14', 'Pedro Rocha', '345678901', '334445522'),
-(4, '2024-01-11', '2024-01-16', 'Larissa Costa', '456789012', '445566633'),
-(5, '2024-01-13', '2024-01-18', 'Mariana Silva', '567890123', '556667744'),
-(6, '2024-01-15', '2024-01-20', 'Pedro Rocha', '678901234', '667778885');
-
-SELECT v.idVeiculo,
-  CONCAT(v.marca, ' - ', v.modelo,', ', v.ano, ' (',v.placa,')') as Veiculo,
-  h.dataEntrada as Entrada,
-  h.dataSaida as Saída
-  FROM veiculo as v
-  JOIN hospedagem as h
-  ON h.fkVeiculo = v.idVeiculo;
-
-SELECT c.nome as Cliente,
-  c.email as 'E-mail',
-  IFNULL(e.razaoSocial, 'Sem empresa') as Empresa,
-  IFNULL(e.cnpj, 'Sem CNPJ') as CNPJ,
-  GROUP_CONCAT(IFNULL(CONCAT(v.marca, ' - ', v.modelo,', ', v.ano, ' (',v.placa,')'), 'Sem veículo')) as Veículo,
-  IFNULL(h.dataEntrada, '') as 'Data de Entrada',
-  IFNULL(h.dataSaida, '') as 'Data de Saída',
-  IFNULL(h.nomeMotorista, '') as 'Motorista',
-  IFNULL(h.rg, '') as 'RG do Motorista', 
-  IFNULL(h.cpf, '') as 'CPF do Motorista'
-  FROM cliente as c
-  left JOIN empresa as e
-  ON c.fkEmpresa = e.idEmpresa
-  left JOIN veiculo as v
-  ON v.fkCliente = c.idCliente
-  left JOIN hospedagem as h
-  ON h.fkVeiculo = v.idVeiculo
-  GROUP BY c.nome, c.email, e.razaoSocial, e.cnpj, h.dataEntrada, h.dataSaida, h.nomeMotorista,h.rg, h.cpf
-  ORDER BY h.dataEntrada desc;
-
--- Sistema de Orçamentos
-CREATE TABLE orcamento (
-  idOrcamento INT primary key auto_increment,
-  dataLancamento DATE,
-  orcStatus CHAR(9),
-  CONSTRAINT chkStatus CHECK (orcStatus in ('Pendente', 'Aprovado', 'Concluido'))
-)
-
+-- 12. Tabela servico
 CREATE TABLE servico (
-  idServico INT PRIMARY KEY AUTO_INCREMENT,
-  fkVeiculo INT,
-  CONSTRAINT fkServicoVeiculo FOREIGN KEY (fkVeiculo) REFERENCES veiculo(idVeiculo),
-  descricao VARCHAR(100)
+    id_servico BIGINT PRIMARY KEY,
+    servico VARCHAR(45),
+    descricao VARCHAR(400),
+    categoria VARCHAR(45),
+    valor_padrao DECIMAL(10,2)
 );
 
-CREATE TABLE historico (
-  idHistorico INT AUTO_INCREMENT,
-  fkServico INT,
-  fkOrcamento INT,
-  -- fkVeiculo INT,
-  CONSTRAINT pkComposta PRIMARY KEY (idHistorico, fkServico, fkOrcamento),
-  CONSTRAINT fkHistoricoServico FOREIGN KEY (fkServico) REFERENCES servico(idServico),
-  CONSTRAINT fkHistoricoOrcamento FOREIGN KEY (fkOrcamento) REFERENCES orcamento(idOrcamento),
-  -- CONSTRAINT fkHistoricoVeiculo FOREIGN KEY (fkVeiculo) REFERENCES veiculo(idVeiculo),
-  valor FLOAT,
-  tipo CHAR(15),
-  CONSTRAINT chkTipo CHECK (tipo in ('Funilaria', 'Pintura', 'Mecanica'))
-)
-
-INSERT INTO orcamento VALUES 
-  (default, '2024-01-11', 'Pendente'),
-  (default, '2024-01-11', 'Pendente'),
-  (default, '2024-01-11', 'Pendente');
-
-INSERT INTO servico VALUES 
-  (DEFAULT, 1, 'Porta Lateral LD Motorista (Azul/Prata/Verniz)'),
-  (DEFAULT, 1, 'Troca da Direção'),
-  (DEFAULT, 2, 'Parachoque Dianteiro'),
-  (DEFAULT, 2, 'Parachoque Dianteiro (Azul/Verniz)'),
-  (DEFAULT, 3, 'Parachoque Traseiro (Vermelho/Preto/Verniz)'),
-  (DEFAULT, 3, 'Parachoque Dianteiro (Vermelho/Preto/Verniz)'),
-  (DEFAULT, 3, 'Porta Dianteiro LExLD (Vermelho/Preto/Verniz)'),
-  (DEFAULT, 3, 'Troca da bomba de gasolina'),
-  (DEFAULT, 1, 'Porta Lateral LD Passageiro (Azul/Prata/Verniz)');
-
-INSERT INTO historico VALUES
-  (DEFAULT, 1, 1, 300, 'Pintura'),
-  (DEFAULT, 2, 1, 600, 'Mecanica'),
-  (DEFAULT, 3, 2, 350, 'Funilaria'),
-  (DEFAULT, 4, 2, 300, 'Pintura'),
-  (DEFAULT, 5, 3, 300, 'Pintura'),
-  (DEFAULT, 6, 3, 300, 'Pintura'),
-  (DEFAULT, 7, 3, 750, 'Pintura'),
-  (DEFAULT, 8, 3, 500, 'Mecanica'),
-  (DEFAULT, 9, 1, 300, 'Pintura');
-
-# Mostra o Veículo, Serviços, Data e Status do Orçameto e Total de Custo
-SELECT CONCAT(v.marca, ' ',v.modelo, ' ', v.ano) as Veiculo,
-  GROUP_CONCAT(s.descricao) as Serviço,
-  CONCAT(o.dataLancamento, ' - ', o.Orcstatus) as Orçamento,
-  SUM(his.valor) as Total
-  FROM veiculo as v
-  JOIN servico as s
-  ON s.fkVeiculo = v.idVeiculo
-  JOIN historico as his
-  ON his.fkServico = s.idServico
-  JOIN orcamento as o
-  ON his.fkOrcamento = o.idOrcamento
-  GROUP BY v.marca, v.modelo, v.ano, o.dataLancamento, o.OrcStatus;  
-
-# Mostra o Status do Orçamento do Veículo, Serviços e o Custo Total
-SELECT o.orcStatus as Status, 
-  CONCAT(v.marca, ' ',v.modelo, ' ', v.ano) as Veiculo,
-  CONCAT('R$',(SUM(his.valor))) as Total,
-  GROUP_CONCAT(s.descricao)
-  FROM veiculo as v
-  JOIN servico as s
-  ON s.fkVeiculo = v.idVeiculo
-  JOIN historico as his
-  ON his.fkServico = s.idServico
-  JOIN orcamento as o
-  ON his.fkOrcamento = o.idOrcamento
-  GROUP BY o.orcStatus, v.marca, v.modelo, v.ano;
+-- 13. Tabela servico_item
+CREATE TABLE servico_item (
+    id_servico_item VARCHAR(45) PRIMARY KEY,
+    valor_item DECIMAL(10,2),
+    quantidade INT,
+    valor_subtotal DECIMAL(10,2),
+    descricao_servico VARCHAR(400),
+    fk_ordem_servico BIGINT,
+    fk_servico BIGINT,
+    FOREIGN KEY (fk_ordem_servico) REFERENCES ordem_servico(id_ordem_servico),
+    FOREIGN KEY (fk_servico) REFERENCES servico(id_servico)
+);
