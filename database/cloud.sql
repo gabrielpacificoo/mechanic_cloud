@@ -84,7 +84,7 @@ CREATE TABLE filial (
 
 -- 9. Tabela usuario
 CREATE TABLE usuario (
-    id_usuario BIGINT PRIMARY KEY,
+    id_usuario CHAR(36) PRIMARY KEY,
     nome VARCHAR(65),
     sobrenome VARCHAR(65),
     data_nascimento DATE,
