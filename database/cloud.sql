@@ -91,13 +91,14 @@ CREATE TABLE usuario (
     cpf CHAR(9),
     senha VARCHAR(45),
     fk_oficina BIGINT,
-    FOREIGN KEY (fk_oficina) REFERENCES oficina(id_oficina)
+    FOREIGN KEY (fk_oficina) REFERENCES oficina(id_ofifcina)
 );
 
 -- 10. Tabela veiculo
 CREATE TABLE veiculo (
     id_veiculo BIGINT PRIMARY KEY,
     placa VARCHAR(10),
+    prefixo VARCHAR(10),
     data_cadastro DATETIME,
     data_atualizacao DATETIME,
     data_ultima_visita DATE,
