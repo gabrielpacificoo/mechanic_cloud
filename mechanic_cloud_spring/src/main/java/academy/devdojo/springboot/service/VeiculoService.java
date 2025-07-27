@@ -1,6 +1,7 @@
 package academy.devdojo.springboot.service;
 
 import academy.devdojo.springboot.domain.Veiculo;
+import academy.devdojo.springboot.exception.BadRequestionException;
 import academy.devdojo.springboot.mapper.VeiculoMapper;
 import academy.devdojo.springboot.repository.VeiculoRepository;
 import academy.devdojo.springboot.requests.VeiculoPostRequestBody;
@@ -31,7 +32,7 @@ public class VeiculoService {
 
     public Veiculo findByIdOrThrowBadRequestException(long id){
         return veiculoRepository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Veiculo not found"));
+            .orElseThrow(() -> new BadRequestionException("Veiculo not found"));
     }
 
     public void delete(long id){
