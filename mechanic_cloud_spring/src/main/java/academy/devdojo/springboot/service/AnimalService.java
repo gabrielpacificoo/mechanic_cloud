@@ -46,9 +46,9 @@ public class AnimalService {
         animalRepository.save(animal);
     }
 
-    public Animal findByTypedOrThrowBadRequestException(String type){
-        return animalRepository.findByType(type)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Animal not found"));
-
-    }
+//    public Animal findByTypedOrThrowBadRequestException(String type){
+//        return animalRepository.findByType(type)
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Animal not found"));
+//
+//    }
 }
