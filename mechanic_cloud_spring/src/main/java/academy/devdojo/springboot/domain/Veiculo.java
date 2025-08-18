@@ -24,8 +24,8 @@ public class Veiculo {
 
     private String placa;
 
-    @Column(name = "data_cadastrada")
-    private LocalDateTime  dataCadastrada;
+    @Column(name = "data_cadastro")
+    private LocalDateTime dataCadastrada;
 
     @Column(name = "data_atualizacao")
     private LocalDateTime dataAtualizacao;

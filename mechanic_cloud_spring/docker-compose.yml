@@ -1,13 +1,13 @@
 services:
   mysql:
-    image: mysql:8.0
-    container_name: mysql
+    image: gabrielpacificooo/mechanic-cloud-database:3.5
+    container_name: mechanic-db
     restart: always
     ports:
       - "3307:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: mechanic_cloud
+      MYSQL_DATABASE: urubu100
       TZ: UTC
     command: --default-time-zone='+00:00'
     volumes:

@@ -4,6 +4,7 @@ import academy.devdojo.springboot.domain.Veiculo;
 import academy.devdojo.springboot.requests.VeiculoPostRequestBody;
 import academy.devdojo.springboot.requests.VeiculoPutRequestPlaca;
 import academy.devdojo.springboot.service.VeiculoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +28,9 @@ public class VeiculoController {
         return ResponseEntity.ok(veiculoService.findByIdOrThrowBadRequestException(id));
     }
 
-//    @GetMapping(path = "/find")
-//    public ResponseEntity<Veiculo> findByPlaca(@RequestParam String placa){
-//        return ResponseEntity.ok(veiculoService.findByPlaca(placa));
-//    }
 
     @PostMapping(path = "/cadastrar")
-    public ResponseEntity<Veiculo> save(@RequestBody VeiculoPostRequestBody veiculoPostRequestBody){
+    public ResponseEntity<Veiculo> save(@RequestBody @Valid VeiculoPostRequestBody veiculoPostRequestBody){
        return new ResponseEntity<>(veiculoService.save(veiculoPostRequestBody), HttpStatus.CREATED);
     }
 
