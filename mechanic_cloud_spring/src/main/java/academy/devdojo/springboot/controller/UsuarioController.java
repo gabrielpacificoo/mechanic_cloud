@@ -1,9 +1,6 @@
 package academy.devdojo.springboot.controller;
 
-import academy.devdojo.springboot.domain.Animal;
 import academy.devdojo.springboot.domain.Usuario;
-import academy.devdojo.springboot.requests.AnimalPostRequestBody;
-import academy.devdojo.springboot.requests.AnimalPutRequestBody;
 import academy.devdojo.springboot.requests.LoginUsuarioGetRequestBody;
 import academy.devdojo.springboot.requests.NewUsuarioPostRequestBody;
 import academy.devdojo.springboot.service.UsuarioService;
@@ -13,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j

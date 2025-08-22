@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -30,7 +31,19 @@ public class UsuarioService {
 
     public Usuario addUsuario(NewUsuarioPostRequestBody dto) {
         UUID id = UUID.randomUUID();
+
+        do {
+            Optional<Usuario> u_on_db = usuarioRepository.findById(id);
+            // Usuário com ID existente
+            if (u_on_db.isEmpty()) {
+                break;
+            } else {
+                id = UUID.randomUUID();
+            }
+        } while (true);
+
         Usuario u = new Usuario(id, dto.getNome(), dto.getSobrenome(), dto.getDataNascimento(), dto.getCpf(), dto.getSenha(), dto.getFkOficina());
+
         return usuarioRepository.save(u);
     }
 

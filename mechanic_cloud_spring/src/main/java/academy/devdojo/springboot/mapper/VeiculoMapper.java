@@ -8,7 +8,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
-
 public abstract class VeiculoMapper {
     public static final VeiculoMapper INSTANCE = Mappers.getMapper(VeiculoMapper.class);
     public abstract Veiculo toVeiculo(VeiculoPostRequestBody veiculoPostRequestBody);
